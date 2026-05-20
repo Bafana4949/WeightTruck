@@ -1,10 +1,114 @@
+// --- TYPE INTERFACES ---
+interface Vehicle {
+    id: number;
+    reg: string;
+    fleet: string;
+    inducted: boolean;
+    driver: string;
+}
+
+interface Order {
+    id?: string;
+    orderId?: string;
+    type: string;
+    product: string;
+    target: number;
+    allocated: number;
+    client: string;
+    status: string;
+}
+
+interface TicketDetail {
+    no: string;
+    src?: string;
+    dest?: string;
+    weight: number;
+    time: string;
+}
+
+interface TicketPair {
+    id: string;
+    dispatch: TicketDetail;
+    receipt: TicketDetail;
+    variance: number;
+    reg: string;
+    prod: string;
+    status: string;
+}
+
+interface Stockpile {
+    id?: string;
+    name: string;
+    product: string;
+    tons: number;
+    capacity: number;
+    color: string;
+}
+
+interface Warning {
+    id: number;
+    type: string;
+    title: string;
+    desc: string;
+    time: string;
+    read: boolean;
+}
+
+interface Product {
+    id: number;
+    name: string;
+    stockpiles: string[];
+}
+
+interface Haulier {
+    id: string;
+    name: string;
+    mass: number;
+    vehicles: number;
+}
+
+interface GateEvent {
+    reg: string;
+    time: string;
+    status: 'granted' | 'denied';
+    msg: string;
+    error?: boolean;
+}
+
+interface InventoryLog {
+    time: string;
+    target: string;
+    product: string;
+    mass: string;
+    haulier: string;
+    reg: string;
+    verification: string;
+}
+
+interface AppState {
+    allocatedMass: number;
+    totalOrderMass: number;
+    hauliers: Haulier[];
+    availableVehicles: Vehicle[];
+    assignedVehicles: { [key: number]: number[] };
+    orders: Order[];
+    dualTickets: { [key: number]: TicketPair };
+    stockpiles: Stockpile[];
+    warnings: Warning[];
+    simulationActive: boolean;
+    simulationInterval: number;
+    varianceThreshold: number;
+    ratePerTon: number;
+    dailyTarget: number;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     // --- API CONFIGURATION ---
     const BACKEND_URL = 'http://localhost:8080/api';
     let useBackend = false;
 
     // --- APP STATE (Initialize defaults) ---
-    let appState = {
+    let appState: AppState = {
         allocatedMass: 0,
         totalOrderMass: 34.00,
         hauliers: [],
@@ -15,9 +119,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             { id: 4, reg: 'L-008-MN', fleet: 'V04', inducted: true, driver: 'Sarah Jenkins' },
             { id: 5, reg: 'GP-772-XL', fleet: 'V05', inducted: true, driver: 'Piet de Wet' }
         ],
-        assignedVehicles: {}, // Map of haulierIndex -> [vehicleIds]
+        assignedVehicles: {},
         
-        // Local fallback databases
         orders: [
             { id: 'ORD-4029', type: 'Dispatch', product: 'Anthracite Pea', target: 34.00, allocated: 34.00, client: 'Glencore Operations', status: 'Approved' },
             { id: 'ORD-4030', type: 'Dispatch', product: 'RB1 Export', target: 120.00, allocated: 60.00, client: 'Exxaro Resources', status: 'Approved' },
@@ -58,7 +161,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             { id: 3, type: 'success', title: 'Intake Reconciled', desc: 'Ticket T-84210 fully reconciled with GLENCORE. Mass variance 1.2% within threshold.', time: '40 mins ago', read: true }
         ],
 
-        // Config variables
         simulationActive: true,
         simulationInterval: 15,
         varianceThreshold: 2.0,
@@ -71,7 +173,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         username: 'Irfan Zad'
     };
 
-    const products = [
+    const products: Product[] = [
         { id: 10, name: 'Anthracite Pea', stockpiles: ['Stockpile A', 'Stockpile B'] },
         { id: 11, name: 'RB1 Export', stockpiles: ['Export Bin 1', 'Export Bin 2'] },
         { id: 12, name: 'Duff', stockpiles: ['Duff Pile 1'] }
@@ -91,7 +193,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load configurations from LocalStorage
     if (localStorage.getItem('wieghtruck_state')) {
         try {
-            const savedState = JSON.parse(localStorage.getItem('wieghtruck_state'));
+            const savedState = JSON.parse(localStorage.getItem('wieghtruck_state') || '{}');
             appState.simulationActive = savedState.simulationActive ?? appState.simulationActive;
             appState.simulationInterval = savedState.simulationInterval ?? appState.simulationInterval;
             appState.varianceThreshold = savedState.varianceThreshold ?? appState.varianceThreshold;
@@ -117,7 +219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     toastContainer.className = 'toast-container';
     document.body.appendChild(toastContainer);
 
-    const showToast = (message, type = 'success') => {
+    const showToast = (message: string, type: 'success' | 'error' = 'success') => {
         const toast = document.createElement('div');
         toast.className = `toast-message toast-${type}`;
         const icon = type === 'error' ? 'fa-triangle-exclamation' : 'fa-circle-check';
@@ -140,12 +242,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const navItems = document.querySelectorAll('.nav-item');
     const viewSections = document.querySelectorAll('.view-section');
 
-    const switchView = (viewName) => {
+    const switchView = (viewName: string) => {
         navItems.forEach(item => {
-            if (item.dataset.view === viewName) {
-                item.classList.add('active');
+            const htmlItem = item as HTMLElement;
+            if (htmlItem.dataset.view === viewName) {
+                htmlItem.classList.add('active');
             } else {
-                item.classList.remove('active');
+                htmlItem.classList.remove('active');
             }
         });
 
@@ -166,7 +269,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
-            const view = item.dataset.view;
+            const htmlItem = item as HTMLElement;
+            const view = htmlItem.dataset.view;
             if (!view) return;
             e.preventDefault();
             switchView(view);
@@ -175,7 +279,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- UTILS & CORE DISPLAYS ---
     const updateMassDisplays = () => {
-        const allocated = appState.hauliers.reduce((sum, h) => sum + parseFloat(h.mass || 0), 0);
+        const allocated = appState.hauliers.reduce((sum, h) => sum + parseFloat((h.mass || 0).toString()), 0);
         const displayAllocated = document.getElementById('displayAllocatedMass');
         const displayUnallocated = document.getElementById('displayUnallocatedMass');
         const displayTotal = document.getElementById('displayTotalOrderMass');
@@ -188,21 +292,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // Modal Control Setup
-    const setupModal = (modalId, triggerBtnId) => {
+    const setupModal = (modalId: string, triggerBtnId: string | null) => {
         const modal = document.getElementById(modalId);
-        const trigger = document.getElementById(triggerBtnId);
         if (!modal) return;
-        const closers = modal.querySelectorAll('.close-modal');
-
-        if (trigger) {
-            trigger.onclick = (e) => {
-                e.preventDefault();
-                modal.style.display = 'block';
-            };
+        
+        if (triggerBtnId) {
+            const trigger = document.getElementById(triggerBtnId);
+            if (trigger) {
+                trigger.onclick = (e) => {
+                    e.preventDefault();
+                    modal.style.display = 'block';
+                };
+            }
         }
         
+        const closers = modal.querySelectorAll('.close-modal');
         closers.forEach(btn => {
-            btn.onclick = (e) => {
+            const htmlBtn = btn as HTMLElement;
+            htmlBtn.onclick = (e) => {
                 e.preventDefault();
                 modal.style.display = 'none';
             };
@@ -218,21 +325,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupModal('haulier-modal', 'btn-add-haulier');
     setupModal('vehicle-modal', null);
 
-    const tabGeneralBtn = document.querySelector('[data-tab="general"]');
-    const tabHauliersBtn = document.querySelector('[data-tab="hauliers"]');
+    const tabGeneralBtn = document.querySelector('[data-tab="general"]') as HTMLElement | null;
+    const tabHauliersBtn = document.querySelector('[data-tab="hauliers"]') as HTMLElement | null;
     
     if (tabGeneralBtn && tabHauliersBtn) {
         tabGeneralBtn.onclick = () => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             tabGeneralBtn.classList.add('active');
-            document.getElementById('tab-general').classList.add('active');
+            document.getElementById('tab-general')?.classList.add('active');
         };
         tabHauliersBtn.onclick = () => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             tabHauliersBtn.classList.add('active');
-            document.getElementById('tab-hauliers').classList.add('active');
+            document.getElementById('tab-hauliers')?.classList.add('active');
         };
     }
 
@@ -243,13 +350,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         { id: 'T-84212', reg: 'NW-441-RT', prod: 'RB1 Export', gross: '62.40 t', net: '43.12 t', time: '12:35', status: 'Variance Flagged' }
     ];
 
-    let mockGateEvents = [
+    let mockGateEvents: GateEvent[] = [
         { reg: 'L-008-MN', time: '12:12', status: 'granted', msg: 'Induction valid. Order active.' },
         { reg: 'NW-441-RT', time: '12:25', status: 'denied', msg: 'Missing driver induction.', error: true },
         { reg: 'GP-772-XL', time: '12:31', status: 'granted', msg: 'License valid. Access granted.' }
     ];
 
-    let recentInventoryLogs = [
+    let recentInventoryLogs: InventoryLog[] = [
         { time: '12:15', target: 'Stockpile A', product: 'Anthracite Pea', mass: '34.10 t', haulier: 'Unitrans Supply Chain', reg: 'GP-142-TR', verification: 'Accepted' },
         { time: '11:42', target: 'Stockpile B', product: 'RB1 Export', mass: '28.05 t', haulier: 'Barloworld Logistics', reg: 'MP-990-CL', verification: 'Accepted' },
         { time: '10:15', target: 'Stockpile C', product: 'Duff', mass: '33.69 t', haulier: 'Imperial Logistics', reg: 'L-008-MN', verification: 'Accepted' },
@@ -269,7 +376,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!gateFeed) return;
         gateFeed.innerHTML = '';
         
-        let logs = mockGateEvents;
+        let logs: GateEvent[] = mockGateEvents;
         if (useBackend) {
             try {
                 const res = await fetch(`${BACKEND_URL}/telemetry/gate-logs`);
@@ -298,7 +405,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // --- LIVE FEED RENDERING ---
-    const renderFeed = async (overrideItems = null) => {
+    const renderFeed = async (overrideItems: any[] | null = null) => {
         const feed = document.getElementById('weighbridge-feed');
         if (!feed) return;
         feed.innerHTML = '';
@@ -310,7 +417,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const res = await fetch(`${BACKEND_URL}/telemetry/tickets`);
                     if (res.ok) {
                         const tickets = await res.json();
-                        items = tickets.map(t => ({
+                        items = tickets.map((t: any) => ({
                             id: t.ticketId,
                             reg: t.reg,
                             prod: t.prod,
@@ -347,7 +454,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // --- NOTIFICATION DRAWER LOGIC ---
-    const notificationDrawer = document.getElementById('notification-drawer');
+    const notificationDrawer = document.getElementById('notification-drawer') as HTMLElement;
     const notificationBellBtn = document.getElementById('notification-bell-btn');
     const closeNotificationDrawerBtn = document.getElementById('close-notification-drawer-btn');
     const notificationDrawerContent = document.getElementById('notification-drawer-content');
@@ -356,7 +463,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const updateNotificationBadge = () => {
         const unreadCount = appState.warnings.filter(w => !w.read).length;
         if (notificationBadge) {
-            notificationBadge.textContent = unreadCount;
+            notificationBadge.textContent = unreadCount.toString();
             notificationBadge.style.display = unreadCount > 0 ? 'flex' : 'none';
         }
     };
@@ -407,11 +514,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // --- ANIMATED TRUCK TELEMETRY (SVG Map Pathing) ---
-    const movingTruck = document.getElementById('moving-truck');
+    const movingTruck = document.getElementById('moving-truck') as HTMLElement | null;
     const movingTruckReg = document.getElementById('moving-truck-reg');
     const movingTruckStatus = document.getElementById('moving-truck-status');
     const movingTruckDeviation = document.getElementById('moving-truck-deviation');
-    const svgRouteLine = document.getElementById('svg-route-line');
+    const svgRouteLine = document.getElementById('svg-route-line') as any;
     
     let pathProgress = 0;
     let telemetrySpeed = 0.15;
@@ -431,13 +538,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             movingTruck.style.top = pt.y + '%';
             
             if (pathProgress > 15 && pathProgress < 80) {
-                movingTruckStatus.textContent = 'En Route';
-                movingTruckDeviation.textContent = 'No Deviations';
-                movingTruckDeviation.className = 'status-ok';
+                if (movingTruckStatus) movingTruckStatus.textContent = 'En Route';
+                if (movingTruckDeviation) {
+                    movingTruckDeviation.textContent = 'No Deviations';
+                    movingTruckDeviation.className = 'status-ok';
+                }
             }
         } else if (!isTransitioning) {
             isTransitioning = true;
-            movingTruckStatus.textContent = 'At Weighbridge';
+            if (movingTruckStatus) movingTruckStatus.textContent = 'At Weighbridge';
             
             setTimeout(() => {
                 triggerSimulationEvent();
@@ -463,7 +572,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         if (varianceVal > appState.varianceThreshold) {
             ticketStatus = 'Variance Flagged';
-            const newWarning = {
+            const newWarning: Warning = {
                 id: Date.now(),
                 type: 'alert',
                 title: 'Mass Variance Triggered',
@@ -539,7 +648,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Gate control log simulation
         const isGranted = Math.random() > 0.15;
-        const gateLog = {
+        const gateLog: GateEvent = {
             reg: appState.availableVehicles[Math.floor(Math.random() * appState.availableVehicles.length)].reg,
             time: new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }),
             status: isGranted ? 'granted' : 'denied',
@@ -597,16 +706,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const res = await fetch(`${BACKEND_URL}/orders`);
                 if (res.ok) {
                     orders = await res.json();
-                    appState.orders = orders; // Sync
+                    appState.orders = orders;
                 }
             } catch (e) {
                 console.error("Failed to fetch orders from backend:", e);
             }
         }
 
-        const filterVal = document.getElementById('orders-search').value.trim().toLowerCase();
+        const searchInput = document.getElementById('orders-search') as HTMLInputElement;
+        const filterVal = (searchInput?.value || '').trim().toLowerCase();
         const filtered = orders.filter(o => 
-            (o.orderId || '').toLowerCase().includes(filterVal) ||
+            (o.orderId || o.id || '').toLowerCase().includes(filterVal) ||
             (o.product || '').toLowerCase().includes(filterVal) ||
             (o.client || '').toLowerCase().includes(filterVal)
         );
@@ -634,8 +744,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         document.querySelectorAll('.btn-delete-order').forEach(btn => {
-            btn.onclick = async (e) => {
-                const id = e.currentTarget.dataset.id;
+            const htmlBtn = btn as HTMLElement;
+            htmlBtn.onclick = async (e) => {
+                const id = htmlBtn.dataset.id;
                 if (useBackend) {
                     try {
                         await fetch(`${BACKEND_URL}/orders/${id}`, { method: 'DELETE' });
@@ -645,7 +756,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         console.error("Failed to delete order from backend:", e);
                     }
                 } else {
-                    appState.orders = appState.orders.filter(o => o.id !== id);
+                    appState.orders = appState.orders.filter(o => (o.id !== id && o.orderId !== id));
                     renderOrdersTable();
                     showToast(`Order ${id} removed successfully`);
                 }
@@ -653,7 +764,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     };
 
-    const ordersSearchInput = document.getElementById('orders-search');
+    const ordersSearchInput = document.getElementById('orders-search') as HTMLInputElement | null;
     if (ordersSearchInput) {
         ordersSearchInput.oninput = renderOrdersTable;
     }
@@ -680,10 +791,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td>${destination}</td>
                 <td>${signalStatus}</td>
                 <td>
-                    <button class="btn-text" onclick="alert('Pinging telemetry box on vehicle ${v.reg}. Latency 12ms. GPS locked.')"><i class="fa-solid fa-satellite-dish"></i> Ping</button>
+                    <button class="btn-text btn-ping" data-reg="${v.reg}"><i class="fa-solid fa-satellite-dish"></i> Ping</button>
                 </td>
             `;
             transitVehiclesList.appendChild(row);
+        });
+
+        document.querySelectorAll('.btn-ping').forEach(btn => {
+            const htmlBtn = btn as HTMLElement;
+            htmlBtn.onclick = () => {
+                alert(`Pinged telemetry box on vehicle ${htmlBtn.dataset.reg}. Latency 12ms. GPS locked.`);
+            };
         });
     };
 
@@ -762,7 +880,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (linePath && pointsGroup) {
             pointsGroup.innerHTML = '';
-            labelsGroup.innerHTML = '';
+            if (labelsGroup) labelsGroup.innerHTML = '';
             
             const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
             const xOffset = 50;
@@ -770,7 +888,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const height = 150;
             const maxVal = Math.max(...weeklyTonnages) * 1.1;
 
-            let pathCoords = [];
+            let pathCoords: string[] = [];
             
             days.forEach((day, index) => {
                 const x = xOffset + (width / (days.length - 1)) * index;
@@ -780,45 +898,55 @@ document.addEventListener('DOMContentLoaded', async () => {
                 pathCoords.push(`${x},${y}`);
 
                 const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                circle.setAttribute('cx', x);
-                circle.setAttribute('cy', y);
+                circle.setAttribute('cx', x.toString());
+                circle.setAttribute('cy', y.toString());
                 circle.setAttribute('class', 'chart-point');
                 
-                circle.addEventListener('mouseover', (e) => {
+                circle.addEventListener('mouseover', (e: any) => {
                     const tooltip = document.getElementById('chart-tooltip');
-                    tooltip.style.display = 'block';
-                    tooltip.innerHTML = `<strong>${day}</strong>: ${tonnage} t`;
-                    
-                    const rect = e.target.getBoundingClientRect();
-                    const containerRect = document.querySelector('.chart-wrapper').getBoundingClientRect();
-                    tooltip.style.left = (rect.left - containerRect.left - 20) + 'px';
-                    tooltip.style.top = (rect.top - containerRect.top - 35) + 'px';
+                    if (tooltip) {
+                        tooltip.style.display = 'block';
+                        tooltip.innerHTML = `<strong>${day}</strong>: ${tonnage} t`;
+                        
+                        const rect = e.target.getBoundingClientRect();
+                        const wrapper = document.querySelector('.chart-wrapper');
+                        if (wrapper) {
+                            const containerRect = wrapper.getBoundingClientRect();
+                            tooltip.style.left = (rect.left - containerRect.left - 20) + 'px';
+                            tooltip.style.top = (rect.top - containerRect.top - 35) + 'px';
+                        }
+                    }
                 });
 
                 circle.addEventListener('mouseout', () => {
-                    document.getElementById('chart-tooltip').style.display = 'none';
+                    const tooltip = document.getElementById('chart-tooltip');
+                    if (tooltip) tooltip.style.display = 'none';
                 });
 
                 pointsGroup.appendChild(circle);
 
-                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                text.setAttribute('x', x);
-                text.setAttribute('y', 205);
-                text.setAttribute('text-anchor', 'middle');
-                text.setAttribute('class', 'chart-axis-text');
-                text.textContent = day;
-                labelsGroup.appendChild(text);
+                if (labelsGroup) {
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', x.toString());
+                    text.setAttribute('y', '205');
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('class', 'chart-axis-text');
+                    text.textContent = day;
+                    labelsGroup.appendChild(text);
+                }
             });
 
             linePath.setAttribute('d', `M${pathCoords.join(' L')}`);
-            areaPath.setAttribute('d', `M50,180 L${pathCoords.join(' L')} L${xOffset + width},180 Z`);
+            if (areaPath) {
+                areaPath.setAttribute('d', `M50,180 L${pathCoords.join(' L')} L${xOffset + width},180 Z`);
+            }
         }
 
         const barChartContent = document.getElementById('bar-chart-content');
         if (barChartContent) {
             barChartContent.innerHTML = '';
             
-            const prodKeys = Object.keys(productTonnages);
+            const prodKeys = Object.keys(productTonnages) as ('Anthracite Pea' | 'RB1 Export' | 'Duff')[];
             const xOffset = 50;
             const barWidth = 35;
             const chartHeight = 130;
@@ -831,10 +959,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const y = 180 - barHeight;
 
                 const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                rect.setAttribute('x', x);
-                rect.setAttribute('y', y);
-                rect.setAttribute('width', barWidth);
-                rect.setAttribute('height', barHeight);
+                rect.setAttribute('x', x.toString());
+                rect.setAttribute('y', y.toString());
+                rect.setAttribute('width', barWidth.toString());
+                rect.setAttribute('height', barHeight.toString());
                 rect.setAttribute('class', 'chart-bar');
                 
                 if (key === 'Anthracite Pea') rect.style.fill = 'var(--primary-blue)';
@@ -842,8 +970,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (key === 'Duff') rect.style.fill = 'var(--primary-cyan)';
 
                 const textVal = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                textVal.setAttribute('x', x + barWidth/2);
-                textVal.setAttribute('y', y - 8);
+                textVal.setAttribute('x', (x + barWidth/2).toString());
+                textVal.setAttribute('y', (y - 8).toString());
                 textVal.setAttribute('text-anchor', 'middle');
                 textVal.setAttribute('class', 'chart-axis-text');
                 textVal.style.fill = '#ffffff';
@@ -851,8 +979,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 textVal.textContent = value + 't';
 
                 const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                label.setAttribute('x', x + barWidth/2);
-                label.setAttribute('y', 205);
+                label.setAttribute('x', (x + barWidth/2).toString());
+                label.setAttribute('y', '205');
                 label.setAttribute('text-anchor', 'middle');
                 label.setAttribute('class', 'chart-axis-text');
                 label.textContent = key.split(' ')[0];
@@ -865,30 +993,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // --- VIEW 6: SETTINGS VIEW CONTROLLERS ---
-    const toggleSimSwitch = document.getElementById('settings-toggle-simulation');
-    const simSpeedRange = document.getElementById('settings-simulation-speed');
-    const varThresholdInput = document.getElementById('settings-variance-threshold');
-    const ratePerTonInput = document.getElementById('settings-rate-per-ton');
-    const dailyTargetInput = document.getElementById('settings-daily-target');
+    const toggleSimSwitch = document.getElementById('settings-toggle-simulation') as HTMLInputElement | null;
+    const simSpeedRange = document.getElementById('settings-simulation-speed') as HTMLInputElement | null;
+    const varThresholdInput = document.getElementById('settings-variance-threshold') as HTMLInputElement | null;
+    const ratePerTonInput = document.getElementById('settings-rate-per-ton') as HTMLInputElement | null;
+    const dailyTargetInput = document.getElementById('settings-daily-target') as HTMLInputElement | null;
     const saveSettingsBtn = document.getElementById('btn-save-settings');
 
     const renderSettingsTab = () => {
         if (toggleSimSwitch) toggleSimSwitch.checked = appState.simulationActive;
-        if (simSpeedRange) simSpeedRange.value = appState.simulationInterval;
-        if (varThresholdInput) varThresholdInput.value = appState.varianceThreshold;
-        if (ratePerTonInput) ratePerTonInput.value = appState.ratePerTon;
-        if (dailyTargetInput) dailyTargetInput.value = appState.dailyTarget;
+        if (simSpeedRange) simSpeedRange.value = appState.simulationInterval.toString();
+        if (varThresholdInput) varThresholdInput.value = appState.varianceThreshold.toString();
+        if (ratePerTonInput) ratePerTonInput.value = appState.ratePerTon.toString();
+        if (dailyTargetInput) dailyTargetInput.value = appState.dailyTarget.toString();
     };
 
     if (saveSettingsBtn) {
         saveSettingsBtn.onclick = (e) => {
             e.preventDefault();
             
-            appState.simulationActive = toggleSimSwitch.checked;
-            appState.simulationInterval = parseInt(simSpeedRange.value);
-            appState.varianceThreshold = parseFloat(varThresholdInput.value);
-            appState.ratePerTon = parseFloat(ratePerTonInput.value);
-            appState.dailyTarget = parseFloat(dailyTargetInput.value);
+            if (toggleSimSwitch) appState.simulationActive = toggleSimSwitch.checked;
+            if (simSpeedRange) appState.simulationInterval = parseInt(simSpeedRange.value);
+            if (varThresholdInput) appState.varianceThreshold = parseFloat(varThresholdInput.value);
+            if (ratePerTonInput) appState.ratePerTon = parseFloat(ratePerTonInput.value);
+            if (dailyTargetInput) appState.dailyTarget = parseFloat(dailyTargetInput.value);
             
             saveStateToLocalStorage();
             showToast("Configurations saved successfully!");
@@ -901,33 +1029,47 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // --- DUAL TICKET COMPARE CONTROLLER ---
-    const updateAnalytics = (id) => {
+    const updateAnalytics = (id: number) => {
         const data = appState.dualTickets[id];
         if (!data) return;
 
-        document.getElementById('disp-no').textContent = data.dispatch.no;
-        document.getElementById('disp-src').textContent = data.dispatch.src;
-        document.getElementById('disp-weight').textContent = data.dispatch.weight.toFixed(2) + ' t';
-        document.getElementById('disp-time').textContent = data.dispatch.time;
+        const dNo = document.getElementById('disp-no');
+        const dSrc = document.getElementById('disp-src');
+        const dWt = document.getElementById('disp-weight');
+        const dTm = document.getElementById('disp-time');
         
-        document.getElementById('rect-no').textContent = data.receipt.no;
-        document.getElementById('rect-dest').textContent = data.receipt.dest;
-        document.getElementById('rect-weight').textContent = data.receipt.weight.toFixed(2) + ' t';
-        document.getElementById('rect-time').textContent = data.receipt.time;
+        const rNo = document.getElementById('rect-no');
+        const rDest = document.getElementById('rect-dest');
+        const rWt = document.getElementById('rect-weight');
+        const rTm = document.getElementById('rect-time');
 
-        document.getElementById('variance-val').textContent = data.variance.toFixed(1) + '%';
+        const vVal = document.getElementById('variance-val');
         const statusEl = document.getElementById('variance-status');
+
+        if (dNo) dNo.textContent = data.dispatch.no;
+        if (dSrc) dSrc.textContent = data.dispatch.src || '';
+        if (dWt) dWt.textContent = data.dispatch.weight.toFixed(2) + ' t';
+        if (dTm) dTm.textContent = data.dispatch.time;
         
-        if (data.variance < appState.varianceThreshold) {
-            statusEl.textContent = 'ACCEPTED';
-            statusEl.className = 'variance-status ok';
-        } else {
-            statusEl.textContent = 'REVIEW REQ';
-            statusEl.className = 'variance-status warning';
+        if (rNo) rNo.textContent = data.receipt.no;
+        if (rDest) rDest.textContent = data.receipt.dest || '';
+        if (rWt) rWt.textContent = data.receipt.weight.toFixed(2) + ' t';
+        if (rTm) rTm.textContent = data.receipt.time;
+
+        if (vVal) vVal.textContent = data.variance.toFixed(1) + '%';
+        
+        if (statusEl) {
+            if (data.variance < appState.varianceThreshold) {
+                statusEl.textContent = 'ACCEPTED';
+                statusEl.className = 'variance-status ok';
+            } else {
+                statusEl.textContent = 'REVIEW REQ';
+                statusEl.className = 'variance-status warning';
+            }
         }
     };
 
-    const ticketComparisonSelect = document.getElementById('ticket-comparison-select');
+    const ticketComparisonSelect = document.getElementById('ticket-comparison-select') as HTMLSelectElement | null;
     if (ticketComparisonSelect) {
         ticketComparisonSelect.innerHTML = '';
         Object.entries(appState.dualTickets).forEach(([key, ticket]) => {
@@ -937,14 +1079,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             ticketComparisonSelect.appendChild(opt);
         });
 
-        ticketComparisonSelect.onchange = (e) => {
-            updateAnalytics(e.target.value);
+        ticketComparisonSelect.onchange = (e: any) => {
+            updateAnalytics(Number(e.target.value));
         };
     }
 
     // --- SEARCH / FILTER GLOBALS ---
-    const feedSearchInput = document.getElementById('feed-search');
-    const mainSearchInput = document.getElementById('main-search');
+    const feedSearchInput = document.getElementById('feed-search') as HTMLInputElement | null;
+    const mainSearchInput = document.getElementById('main-search') as HTMLInputElement | null;
     const btnViewAllFeed = document.getElementById('btn-view-all-feed');
 
     const filterFeed = () => {
@@ -978,21 +1120,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // --- CREATE ORDER SUBMIT & TABS LOGIC ---
-    const comboProduct = document.getElementById('comboProductId');
-    const comboStockpile = document.getElementById('comboStockPileId');
-    const orderEstimatedMass = document.getElementById('orderEstimatedMass');
-    const orderNoteContainer = document.getElementById('order-note-container');
+    const comboProduct = document.getElementById('comboProductId') as HTMLSelectElement | null;
+    const comboStockpile = document.getElementById('comboStockPileId') as HTMLSelectElement | null;
+    const orderEstimatedMass = document.getElementById('orderEstimatedMass') as HTMLInputElement | null;
+    const orderNoteContainer = document.getElementById('order-note-container') as HTMLElement | null;
     const orderNoteText = document.getElementById('order-note-text');
     const haulierError = document.getElementById('haulier-error');
 
-    const showHaulierError = (message) => {
+    const showHaulierError = (message: string) => {
         if (!haulierError) return;
         haulierError.textContent = message;
         haulierError.hidden = !message;
     };
 
     const updateOrderMass = () => {
-        const mass = parseFloat(orderEstimatedMass.value || 0);
+        if (!orderEstimatedMass) return;
+        const mass = parseFloat(orderEstimatedMass.value || '0');
         appState.totalOrderMass = mass;
         const totalMassEl = document.getElementById('displayTotalOrderMass');
         if (totalMassEl) totalMassEl.textContent = mass.toFixed(2) + ' t';
@@ -1000,14 +1143,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     if (comboProduct) {
-        comboProduct.onchange = (e) => {
+        comboProduct.onchange = (e: any) => {
             const product = products.find(p => p.id == e.target.value);
             if (comboStockpile) {
                 comboStockpile.innerHTML = '<option value="0">Select Stockpile...</option>';
                 if (product) {
                     product.stockpiles.forEach((s, i) => {
                         const opt = document.createElement('option');
-                        opt.value = i + 1;
+                        opt.value = (i + 1).toString();
                         opt.textContent = s;
                         comboStockpile.appendChild(opt);
                     });
@@ -1028,17 +1171,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     document.querySelectorAll('input[name="IsReceipt"]').forEach(radio => {
-        radio.onchange = (e) => {
+        const htmlRadio = radio as HTMLInputElement;
+        htmlRadio.onchange = (e: any) => {
             const isReceipt = e.target.value === '1';
-            const customerCombo = document.getElementById('comboCustomerId');
-            const supplierCombo = document.getElementById('comboSupplierId');
+            const customerCombo = document.getElementById('comboCustomerId') as HTMLSelectElement | null;
+            const supplierCombo = document.getElementById('comboSupplierId') as HTMLSelectElement | null;
             if (customerCombo) customerCombo.disabled = isReceipt;
             if (supplierCombo) supplierCombo.disabled = !isReceipt;
             
             if (isReceipt) {
-                if (customerCombo) customerCombo.value = userInfo.organisationId;
+                if (customerCombo) customerCombo.value = userInfo.organisationId.toString();
             } else {
-                if (supplierCombo) supplierCombo.value = userInfo.organisationId;
+                if (supplierCombo) supplierCombo.value = userInfo.organisationId.toString();
             }
         };
     });
@@ -1054,7 +1198,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td><strong>${h.name}</strong></td>
-                <td>${parseFloat(h.mass).toFixed(2)} t</td>
+                <td>${parseFloat(h.mass.toString()).toFixed(2)} t</td>
                 <td><button class="btn-text btn-manage-vehicles" data-index="${index}">${vehicleCount} Assigned</button></td>
                 <td><button class="btn-text btn-delete-haulier" data-index="${index}"><i class="fa-solid fa-trash"></i></button></td>
             `;
@@ -1062,23 +1206,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         document.querySelectorAll('.btn-manage-vehicles').forEach(btn => {
-            btn.onclick = (e) => {
+            const htmlBtn = btn as HTMLElement;
+            htmlBtn.onclick = (e) => {
                 e.preventDefault();
-                openVehicleModal(Number(e.currentTarget.dataset.index));
+                openVehicleModal(Number(htmlBtn.dataset.index));
             };
         });
 
         document.querySelectorAll('.btn-delete-haulier').forEach(btn => {
-            btn.onclick = (e) => {
+            const htmlBtn = btn as HTMLElement;
+            htmlBtn.onclick = (e) => {
                 e.preventDefault();
-                removeHaulier(Number(e.currentTarget.dataset.index));
+                removeHaulier(Number(htmlBtn.dataset.index));
             };
         });
     };
 
-    const removeHaulier = (index) => {
+    const removeHaulier = (index: number) => {
         appState.hauliers.splice(index, 1);
-        const newAssigned = {};
+        const newAssigned: { [key: number]: number[] } = {};
         Object.entries(appState.assignedVehicles).forEach(([key, ids]) => {
             const keyNum = Number(key);
             if (keyNum === index) return;
@@ -1093,10 +1239,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (saveHaulierBtn) {
         saveHaulierBtn.onclick = (e) => {
             e.preventDefault();
-            const hSelect = document.getElementById('comboHaulierId');
-            const massInput = document.getElementById('haulierEstimatedMass');
-            const mass = parseFloat(massInput.value || 0);
-            const allocated = appState.hauliers.reduce((sum, h) => sum + parseFloat(h.mass || 0), 0);
+            const hSelect = document.getElementById('comboHaulierId') as HTMLSelectElement;
+            const massInput = document.getElementById('haulierEstimatedMass') as HTMLInputElement;
+            const mass = parseFloat(massInput.value || '0');
+            const allocated = appState.hauliers.reduce((sum, h) => sum + parseFloat(h.mass.toString()), 0);
             const remaining = appState.totalOrderMass - allocated;
 
             if (mass <= 0) {
@@ -1111,7 +1257,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             showHaulierError('');
 
-            const haulier = {
+            const haulier: Haulier = {
                 id: hSelect.value,
                 name: hSelect.selectedOptions[0].text,
                 mass: mass,
@@ -1121,25 +1267,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             appState.hauliers.push(haulier);
             renderHaulierGrid();
             updateMassDisplays();
-            document.getElementById('haulier-modal').style.display = 'none';
+            const modal = document.getElementById('haulier-modal');
+            if (modal) modal.style.display = 'none';
             massInput.value = '';
         };
     }
 
     // --- VEHICLE PICKER IN MODAL ---
     let activeHaulierIndex = -1;
-    const openVehicleModal = (index) => {
+    const openVehicleModal = (index: number) => {
         activeHaulierIndex = index;
         const vehicleModalTitle = document.getElementById('vehicle-modal-title');
         if (vehicleModalTitle) vehicleModalTitle.textContent = `Authorised Vehicles: ${appState.hauliers[index].name}`;
-        document.getElementById('vehicle-modal').style.display = 'block';
+        const modal = document.getElementById('vehicle-modal');
+        if (modal) modal.style.display = 'block';
         renderVehiclePickers();
     };
 
     const renderVehiclePickers = () => {
         const availList = document.getElementById('list-available');
         const assignedList = document.getElementById('list-assigned');
-        const checkboxShowNonInducted = document.getElementById('checkboxShowNonInducted');
+        const checkboxShowNonInducted = document.getElementById('checkboxShowNonInducted') as HTMLInputElement | null;
         if (!availList || !assignedList) return;
         
         const showOnlyInducted = checkboxShowNonInducted ? checkboxShowNonInducted.checked : true;
@@ -1164,12 +1312,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const displayAvailable = document.getElementById('displayAvailableVehicles');
         const displayAssigned = document.getElementById('displayAssignedVehicles');
-        if (displayAvailable) displayAvailable.textContent = availList.children.length;
-        if (displayAssigned) displayAssigned.textContent = assignedList.children.length;
+        if (displayAvailable) displayAvailable.textContent = availList.children.length.toString();
+        if (displayAssigned) displayAssigned.textContent = assignedList.children.length.toString();
         renderHaulierGrid();
     };
 
-    const toggleVehicle = (id) => {
+    const toggleVehicle = (id: number) => {
         if (!appState.assignedVehicles[activeHaulierIndex]) appState.assignedVehicles[activeHaulierIndex] = [];
         const ids = appState.assignedVehicles[activeHaulierIndex];
         const idx = ids.indexOf(id);
@@ -1177,7 +1325,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderVehiclePickers();
     };
 
-    const chkShowNonInducted = document.getElementById('checkboxShowNonInducted');
+    const chkShowNonInducted = document.getElementById('checkboxShowNonInducted') as HTMLInputElement | null;
     if (chkShowNonInducted) {
         chkShowNonInducted.onchange = renderVehiclePickers;
     }
@@ -1208,28 +1356,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnSaveOrder) {
         btnSaveOrder.onclick = async (e) => {
             e.preventDefault();
-            const orderForm = document.getElementById('order-form');
+            const orderForm = document.getElementById('order-form') as HTMLFormElement;
             const formData = new FormData(orderForm);
             
             const isReceipt = formData.get('IsReceipt') === '1';
             const productId = formData.get('ProductId');
             const customerId = formData.get('CustomerId');
-            const estimatedMass = parseFloat(orderEstimatedMass.value || 34.00);
+            const estimatedMass = orderEstimatedMass ? parseFloat(orderEstimatedMass.value || '34.00') : 34.00;
             
             if (estimatedMass <= 0) {
                 showToast('Please enter a valid estimated mass for the order.', 'error');
                 return;
             }
 
-            const product = products.find(p => p.id == productId) || { name: 'Unknown Product' };
+            const product = products.find(p => p.id == Number(productId)) || { name: 'Unknown Product' };
             const clientName = isReceipt ? 'Sasol Mining' : (customerId == '101' ? 'Glencore Operations' : 'Exxaro Resources');
             
-            const orderData = {
+            const orderData: Order = {
                 orderId: 'ORD-' + Math.floor(10000 + Math.random() * 90000),
                 type: isReceipt ? 'Receipt' : 'Dispatch',
                 product: product.name,
                 target: estimatedMass,
-                allocated: appState.hauliers.reduce((sum, h) => sum + parseFloat(h.mass || 0), 0),
+                allocated: appState.hauliers.reduce((sum, h) => sum + parseFloat(h.mass.toString()), 0),
                 client: clientName,
                 status: 'Approved'
             };
@@ -1275,23 +1423,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (orderNoteContainer) orderNoteContainer.style.display = 'none';
             }
             
-            document.getElementById('order-modal').style.display = 'none';
+            const orderModal = document.getElementById('order-modal');
+            if (orderModal) orderModal.style.display = 'none';
             
             appState.hauliers = [];
             appState.assignedVehicles = {};
             renderHaulierGrid();
             updateMassDisplays();
 
-            if (document.querySelector('.view-section.active').id === 'orders-view') {
+            const activeSection = document.querySelector('.view-section.active');
+            if (activeSection && activeSection.id === 'orders-view') {
                 renderOrdersTable();
             } else {
                 const activeOrdersEl = document.getElementById('kpi-active-orders');
                 if (activeOrdersEl) {
                     if (useBackend) {
                         const res = await fetch(`${BACKEND_URL}/orders`);
-                        if (res.ok) activeOrdersEl.textContent = (await res.json()).length;
+                        if (res.ok) activeOrdersEl.textContent = (await res.json()).length.toString();
                     } else {
-                        activeOrdersEl.textContent = appState.orders.length;
+                        activeOrdersEl.textContent = appState.orders.length.toString();
                     }
                 }
             }
