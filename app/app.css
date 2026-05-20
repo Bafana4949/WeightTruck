@@ -1,0 +1,1278 @@
+/**********************/
+/*** Common Classes ***/
+/**********************/
+.alignLeft {
+    text-align: left;
+}
+
+.alignRight {
+    text-align: right;
+}
+
+/********************/
+/*** Main Toolbar ***/
+/********************/
+.mainToolbar {
+    /*bodyStyle: 'background-color: #595959',*/
+    /*background-image: url(../images/webapp/framework/Toolbar_BG.png);*/
+    /*background-image: url(../images/webapp/themes/tontrac/Toolbar_BG.png);*/
+    background-image: url(../images/webapp/themes/makoya/Toolbar_BG.png);
+    /*background-color: red !important;*/
+}
+
+.toolbarButton {
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    border-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 5px !important;
+}
+
+.toolbarButton:hover {
+    /*border-radius: 5px !important;*/
+    /*border-width: 3px !important;*/
+}
+
+.toolbarButtonDisabled {
+    opacity: 0.5;
+}
+
+.toolbarButtonUser {
+    padding: 3px;
+}
+
+.logo {
+    position: absolute;
+    top: 2px;
+    left: 20px;
+    /*width: 220px;*/
+    width: 280px;
+    height: 79px;
+    /*background-color: orange;*/
+    background: url(../images/webapp/themes/tontrac/TonTrac_Portal_Logo.png) no-repeat;
+    /*background: url(../images/webapp/themes/tontrac/Logo.png) no-repeat;*/
+    z-index: 100000;
+}
+
+.logo.makoya {
+    top: 7px;
+    width: 210px;
+    height: 50px;
+    background: url(../images/webapp/themes/makoya/Logo.png) no-repeat;
+}
+
+.toolbarOrganisation {
+    margin-top: 8px;
+    color: #777 !important;
+    font-family: Verdana, Geneva, sans-serif !important;
+    font-variant: small-caps !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    letter-spacing: 2px !important;
+}
+
+/*** Themes ***/
+/* TonTrac Theme */
+.noHover {
+    pointer-events: none;
+}
+
+.mainToolbar {
+    background-image: url(../images/webapp/themes/tontrac/Toolbar_BG.png);
+}
+
+.buttonAdministrator {
+    background-image: url(../images/webapp/themes/tontrac/Admin.png);
+}
+
+.buttonAdministrator:hover {
+    background-image: url(../images/webapp/themes/tontrac/Admin_alt.png);
+}
+
+.buttonClient {
+    background-image: url(../images/webapp/themes/tontrac/Client.png);
+}
+
+.buttonClient:hover {
+    background-image: url(../images/webapp/themes/tontrac/Client_alt.png);
+}
+
+.buttonControlRoom {
+    background-image: url(../images/webapp/themes/tontrac/ControlRoom.png);
+}
+
+.buttonControlRoom:hover {
+    background-image: url(../images/webapp/themes/tontrac/ControlRoom_alt.png);
+}
+
+.buttonFuel {
+    background-image: url(../images/webapp/themes/tontrac/Fuel.png);
+}
+
+.buttonFuel:hover {
+    background-image: url(../images/webapp/themes/tontrac/Fuel_alt.png);
+}
+
+.buttonGeoTrac {
+    background-image: url(../images/webapp/themes/tontrac/GeoTrac.png);
+}
+
+.buttonGeoTrac:hover {
+    background-image: url(../images/webapp/themes/tontrac/GeoTrac_alt.png);
+}
+
+.buttonHaulier {
+    background-image: url(../images/webapp/themes/tontrac/Haulier.png);
+}
+
+.buttonHaulier:hover {
+    background-image: url(../images/webapp/themes/tontrac/Haulier_alt.png);
+}
+
+.buttonWeighbridge {
+    background-image: url(../images/webapp/themes/tontrac/Weighbridge.png);
+}
+
+.buttonWeighbridge:hover {
+    background-image: url(../images/webapp/themes/tontrac/Weighbridge_alt.png);
+}
+
+.buttonWeightometer {
+    background-image: url(../images/webapp/themes/tontrac/Weightometer.png);
+}
+
+.buttonWeightometer:hover {
+    background-image: url(../images/webapp/themes/tontrac/Weightometer_alt.png);
+}
+
+.buttonStock {
+    background-image: url(../images/webapp/themes/tontrac/Stockpile.png);
+}
+
+.buttonStock:hover {
+    background-image: url(../images/webapp/themes/tontrac/Stockpile_alt.png);
+}
+
+.buttonRail {
+    background-image: url(../images/webapp/themes/tontrac/Rail.png);
+}
+
+.buttonRail:hover {
+    background-image: url(../images/webapp/themes/tontrac/Rail_alt.png);
+}
+
+.buttonSecurity {
+    background-image: url(../images/webapp/themes/tontrac/Security.png);
+}
+
+.buttonSecurity:hover {
+    background-image: url(../images/webapp/themes/tontrac/Security_alt.png);
+}
+
+.buttonFleet {
+    background-image: url(../images/webapp/themes/tontrac/Fleet.png);
+}
+
+.buttonFleet:hover {
+    background-image: url(../images/webapp/themes/tontrac/Fleet_alt.png);
+}
+
+.buttonOrganisation {
+    background-image: url(../images/webapp/themes/tontrac/Organisation.png);
+}
+
+.buttonOrganisation:hover {
+    background-image: url(../images/webapp/themes/tontrac/Organisation_alt.png);
+}
+
+.buttonNotification {
+    background-image: url(../images/webapp/themes/tontrac/Notification.png);
+}
+
+.buttonNotification:hover {
+    background-image: url(../images/webapp/themes/tontrac/Notification_alt.png);
+}
+
+.buttonNotificationHighlight {
+    background-image: url(../images/webapp/themes/tontrac/Notification_alt.png);
+}
+
+.buttonNotification .x-btn-inner, .toolbarButtonUser .x-btn-inner {
+    color: #FD7A00 !important;
+    letter-spacing: 1.5px;
+}
+
+/* Makoya Theme */
+.mainToolbar.makoya {
+    background-image: url(../images/webapp/themes/makoya/Toolbar_BG.png);
+}
+
+.buttonAdministrator.makoya {
+    background-image: url(../images/webapp/themes/makoya/Admin.png);
+}
+
+.buttonAdministrator:hover.makoya {
+    background-image: url(../images/webapp/themes/makoya/Admin_alt.png);
+}
+
+.buttonClient.makoya {
+    background-image: url(../images/webapp/themes/makoya/Client.png);
+}
+
+.buttonClient:hover.makoya {
+    background-image: url(../images/webapp/themes/makoya/Client_alt.png);
+}
+
+.buttonControlRoom.makoya {
+    background-image: url(../images/webapp/themes/makoya/ControlRoom.png);
+}
+
+.buttonControlRoom:hover.makoya {
+    background-image: url(../images/webapp/themes/makoya/ControlRoom_alt.png);
+}
+
+.buttonFuel.makoya {
+    background-image: url(../images/webapp/themes/makoya/Fuel.png);
+}
+
+.buttonFuel:hover.makoya {
+    background-image: url(../images/webapp/themes/makoya/Fuel_alt.png);
+}
+
+.buttonGeoTrac.makoya {
+    background-image: url(../images/webapp/themes/makoya/GeoTrac.png);
+}
+
+.buttonGeoTrac:hover.makoya {
+    background-image: url(../images/webapp/themes/makoya/GeoTrac_alt.png);
+}
+
+.buttonWeighbridge.makoya {
+    background-image: url(../images/webapp/themes/makoya/Weighbridge.png);
+}
+
+.buttonWeighbridge:hover.makoya {
+    background-image: url(../images/webapp/themes/makoya/Weighbridge_alt.png);
+}
+
+.buttonWeightometer.makoya {
+    background-image: url(../images/webapp/themes/makoya/Weightometer.png);
+}
+
+.buttonWeightometer:hover.makoya {
+    background-image: url(../images/webapp/themes/makoya/Weightometer_alt.png);
+}
+
+.buttonStock.makoya {
+    background-image: url(../images/webapp/themes/makoya/Stockpile.png);
+}
+
+.buttonStock:hover.makoya {
+    background-image: url(../images/webapp/themes/makoya/Stockpile_alt.png);
+}
+
+.buttonRail.makoya {
+    background-image: url(../images/webapp/themes/makoya/Rail.png);
+}
+
+.buttonRail:hover.makoya {
+    background-image: url(../images/webapp/themes/makoya/Rail_alt.png);
+}
+
+.buttonSecurity.makoya {
+    background-image: url(../images/webapp/themes/makoya/Security.png);
+}
+
+.buttonSecurity:hover.makoya {
+    background-image: url(../images/webapp/themes/makoya/Security_alt.png);
+}
+
+.buttonFleet.makoya {
+    background-image: url(../images/webapp/themes/makoya/Fleet.png);
+}
+
+.buttonFleet:hover.makoya {
+    background-image: url(../images/webapp/themes/makoya/Fleet_alt.png);
+}
+
+.buttonOrganisation.makoya {
+    background-image: url(../images/webapp/themes/makoya/Organisation.png);
+}
+
+.buttonOrganisation:hover.makoya {
+    background-image: url(../images/webapp/themes/makoya/Organisation_alt.png);
+}
+
+.buttonNotification.makoya {
+    background-image: url(../images/webapp/themes/makoya/Notification.png);
+}
+
+.buttonNotification:hover.makoya {
+    background-image: url(../images/webapp/themes/makoya/Notification_alt.png);
+}
+
+.buttonNotificationHighlight.makoya {
+    background-image: url(../images/webapp/themes/makoya/Notification_alt.png);
+}
+
+.buttonNotification .x-btn-inner, .toolbarButtonUser.makoya .x-btn-inner {
+    color: #141738 !important;
+}
+
+.buttonHaulier.makoya {
+    background-image: url(../images/webapp/themes/makoya/Haulier.png);
+}
+
+.buttonHaulier:hover.makoya {
+    background-image: url(../images/webapp/themes/makoya/Haulier_alt.png);
+}
+
+/***********************/
+/*** Viewport Header ***/
+/***********************/
+.viewportHeader {
+    border: 0;
+    line-height: 40px;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #c1c1c1), color-stop(100%, #7c7a77));
+    background-image: -moz-linear-gradient(top, #c1c1c1, #7c7a77);
+    background-image: linear-gradient(top, #c1c1c1, #7c7a77);
+}
+
+.viewportHeaderLeft {
+    float: left;
+    margin-left: 30px;
+}
+
+.viewportHeaderRight {
+    float: right;
+    margin-right: 30px;
+    line-height: 32px;
+}
+
+.logoTonTrac {
+    position: absolute;
+    top: 2px;
+    left: 10px;
+    z-index: 10000;
+}
+
+.viewportTitle {
+    color: #d7d7d7;
+    font: italic bold 21px Georgia, "Times New Roman", Times, serif;
+    letter-spacing: 3px;
+    /*text-shadow: 1px 1px 2px rgba(140, 140, 140, 0.8);*/
+    text-shadow: 1px 1px 2px rgba(70, 70, 70, 0.8);
+}
+
+.viewportTitleSeperator {
+    color: #faa528;
+    font-size: 14px;
+    font-weight: bold;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-shadow: 1px 1px 2px rgba(70, 70, 70, 0.1);
+}
+
+.viewportText {
+    color: #e6e6e6;
+    /*font-variant: small-caps;*/
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 2px rgba(70, 70, 70, 0.8);
+}
+
+.viewportTextLarge {
+    color: #e6e6e6;
+    font: italic bold 18px Georgia, "Times New Roman", Times, serif;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 2px rgba(70, 70, 70, 0.8);
+}
+
+.viewportTextSeperator {
+    color: #faa528;
+    font-size: 14px;
+    font-weight: bold;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.viewportMenuItem a {
+    color: #e6e6e6;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-decoration: none;
+}
+
+.viewportMenuItem a:hover {
+    font-weight: bold;
+}
+
+/************************/
+/*** Viewport Sidebar ***/
+/************************/
+.viewportSidebar {
+    z-index: 50000;
+}
+
+/*********************************/
+/*** Weighbridge Ticket Layout ***/
+/*********************************/
+.weighbridgeTicket {
+}
+
+.weighbridgeTicket .x-window-body-default, .weighbridgeTicket .x-panel-body-default-framed {
+    color: #9d9d9d;
+    background-color: #fff;
+}
+
+.weighbridgeTicket .ticketGroup {
+    position: relative;
+    clear: both;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 11px !important;
+}
+
+.weighbridgeTicket .ticketGroup p {
+    line-height: 18px;
+}
+
+.weighbridgeTicket .ticketLogo {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 100px;
+    height: 99px;
+    /*background: url(../images/webapp/tt_ticket.png) no-repeat;*/
+    background: url(../images/webapp/tt_ticket_new.png) no-repeat;
+    z-index: 10000;
+}
+
+.weighbridgeTicket .ticketHeader {
+    color: #ff9900 !important;
+    text-align: left;
+    /*margin-bottom: 5px;*/
+    padding: 3px 0 3px 10px;
+    background-color: #f8f8f8;
+}
+
+.weighbridgeTicket .columnHalf {
+    float: left;
+    width: 50%;
+    padding: 10px;
+}
+
+.weighbridgeTicket .columnThird {
+    float: left;
+    width: 33%;
+    padding: 10px;
+}
+
+.weighbridgeTicket .columnSection {
+    padding: 10px 0 0 10px;
+}
+
+.weighbridgeTicket table {
+    line-height: 22px;
+}
+
+.weighbridgeTicket .ticketColumn {
+    color: #606060 !important;
+    font-weight: bold;
+    text-align: right;
+    /*padding-left: 10px;*/
+    padding-right: 10px;
+}
+
+.weighbridgeTicket .ticketBold {
+    color: #606060 !important;
+    font-weight: bold;
+}
+
+.weighbridgeTicket .ticketField {
+    margin-bottom: 8px;
+}
+
+/********************************/
+/*** Notification Area Layout ***/
+/********************************/
+.notificationGroup {
+    margin: 1px;
+}
+
+.notificationGroup .x-panel-body-default {
+    border-color: #fff !important;
+}
+
+.notificationGroup .x-toolbar {
+    padding-bottom: 7px;
+}
+
+.notificationGroup .notificationHigh, .notificationGroup .notificationMedium, .notificationGroup .notificationLow, .notificationGroup .notificationDefault {
+    width: 75px;
+    height: 74px;
+    /*background: url(../images/webapp/tt_priority_medium.png) no-repeat;*/
+}
+
+.notificationGroup .notificationHigh {
+    background: url(../images/webapp/tt_priority_high.png) no-repeat;
+}
+
+.notificationGroup .notificationMedium {
+    background: url(../images/webapp/tt_priority_medium.png) no-repeat;
+}
+
+.notificationGroup .notificationLow {
+    background: url(../images/webapp/tt_priority_low.png) no-repeat;
+}
+
+.notificationGroup .notificationDefault {
+    background: url(../images/webapp/tt_priority_default.png) no-repeat;
+}
+
+.notificationGroup .notificationMessage {
+    color: #777777;
+    width: 320px;
+}
+
+.notificationGroup .notificationMessage p {
+    white-space: normal !important;
+    line-height: 18px !important;
+    /*background-color: #d0d1fd;*/
+}
+
+.notificationGroup .x-btn-inner {
+    color: #FD7A00 !important;
+    letter-spacing: 1.5px;
+    /*font-weight: bold;*/
+}
+
+/****************************/
+/*** Feedback Area Layout ***/
+/****************************/
+.feedbackTitle {
+    color: #666;
+    letter-spacing: 1.2px;
+    line-height: 16px;
+    font-size: 10px;
+}
+
+.feedbackMessage {
+    color: #777;
+}
+
+/*.feedbackTimestamp, .feedbackCategory {*/
+/*color: #777;*/
+/*}*/
+/*.feedbackCategory {*/
+/*margin-left: 20px;*/
+/*}*/
+/*.feedbackAuthor, .feedbackStatus {*/
+/*margin-left: 20px;*/
+/*color: #f18354;*/
+/*font-size: 11px;*/
+/*}*/
+.feedbackSpacer {
+    margin-left: 20px;
+}
+
+.feedbackHiLight {
+    color: #f18354;
+}
+
+/*** Viewport Content ***/
+/*.viewportContent {*/
+/*border-color: #1ff509;*/
+/*border: 3px;*/
+/*background-color: #f00;*/
+/*}*/
+/*** Common Classes ***/
+
+/********************/
+/*** Webtop Icons ***/
+/********************/
+.tontrac {
+    background-image: url('../images/webapp/icons/tontrac.png')
+}
+.tontrac_menu {
+    background-image: url('../images/webapp/icons/tontrac_logo_menu_icon.png')
+}
+.tontrac_menu_orange {
+    background-image: url('../images/webapp/icons/tontrac_logo_menu_icon_orange.png')
+}
+
+.control_room {
+    background-image: url('../images/webapp/icons/control-room.png')
+}
+
+.bullet_red {
+    background-image: url('../images/webapp/icons/bullet_red.png')
+}
+
+.next {
+    background-image: url('../images/webapp/icons/next.png')
+}
+
+.previous {
+    background-image: url('../images/webapp/icons/previous.png')
+}
+
+.add {
+    background-image: url('../images/webapp/icons/add.png')
+}
+
+.delete {
+    background-image: url('../images/webapp/icons/delete.png')
+}
+
+.edit {
+    background-image: url('../images/webapp/icons/edit.png')
+}
+
+.accept {
+    background-image: url('../images/webapp/icons/accept.png')
+}
+
+.exclamation {
+    background-image: url('../images/webapp/icons/exclamation.png')
+}
+
+.refresh {
+    background-image: url('../images/webapp/icons/refresh.gif')
+}
+
+.lorry_go {
+    background-image: url('../images/webapp/icons/lorry_go.png')
+}
+
+.eye {
+    background-image: url('../images/webapp/icons/eye.png')
+}
+
+.user_group {
+    background-image: url('../images/webapp/icons/group.png')
+}
+
+.user_add {
+    background-image: url('../images/webapp/icons/user_add.png')
+}
+
+.user_delete {
+    background-image: url('../images/webapp/icons/user_delete.png')
+}
+
+.chart_organisation {
+    background-image: url('../images/webapp/icons/chart_organisation.png')
+}
+
+.user_edit {
+    background-image: url('../images/webapp/icons/user_edit.png')
+}
+
+.save {
+    background-image: url('../images/webapp/icons/disk.png')
+}
+
+.cog {
+    background-image: url('../images/webapp/icons/cog.png')
+}
+
+.camera {
+    background-image: url('../images/webapp/icons/camera.png')
+}
+
+.flag_yellow {
+    background-image: url('../images/webapp/icons/flag_yellow.png')
+}
+
+.view_map {
+    background-image: url('../images/webapp/icons/map_magnify.png')
+}
+
+.page_white_edit {
+    background-image: url('../images/webapp/icons/page_white_edit.png')
+}
+
+.information {
+    background-image: url('../images/webapp/icons/information.png')
+}
+
+.application_go {
+    background-image: url('../images/webapp/icons/application_go.png')
+}
+
+.chart_bar {
+    background-image: url('../images/webapp/icons/chart_bar.png')
+}
+
+.help {
+    background-image: url('../images/webapp/icons/help.png')
+}
+
+.comment_add {
+    background-image: url('../images/webapp/icons/comment_add.png')
+}
+
+.bug_add {
+    background-image: url('../images/webapp/icons/bug_add.png')
+}
+
+.more_wide {
+    background-image: url('../images/webapp/icons/icon_more.jpg')
+}
+
+.blank {
+    background-image: url('../images/webapp/icons/blank.png')
+}
+
+.client {
+    background-image: url('../images/webapp/icons/Client.png')
+}
+
+.branch {
+    background-image: url('../images/webapp/icons/branch.png')
+}
+
+.search {
+    background-image: url('../images/webapp/icons/mag_glass.png')
+}
+
+.calender {
+    background-image: url('../images/webapp/icons/calendar_edit.png')
+}
+
+.calender-edit {
+    background-image: url('../images/webapp/icons/calendar_edit.png')
+}
+
+.arrow_up {
+    background-image: url('../images/webapp/icons/arrow_up.png')
+}
+
+.monitor {
+    background-image: url('../images/webapp/icons/monitor.png')
+}
+
+.plugin {
+    background-image: url('../images/webapp/icons/plugin.png')
+}
+
+.plugin_add {
+    background-image: url('../images/webapp/icons/plugin_add.png')
+}
+
+.revision {
+    background-image: url('../images/webapp/icons/book_edit.png')
+}
+
+.telephone {
+    background-image: url('../images/webapp/icons/telephone.png')
+}
+
+.arrow_down {
+    background-image: url('../images/webapp/icons/arrow_down.png')
+}
+
+.user {
+    background-image: url('../images/webapp/icons/user.png')
+}
+
+.user_gray {
+    background-image: url('../images/webapp/icons/user_gray.png')
+}
+
+.excel {
+    background-image: url('../images/webapp/icons/excel.gif')
+}
+
+.filter {
+    background-image: url('../images/webapp/icons/filter.png')
+}
+
+/******************/
+/*** Grid Icons ***/
+/******************/
+img.iconCenter {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*** Grid Side Big Thing ***/
+
+/*.t-grid-row, .x-grid-cell-inner {
+    height: 35px;
+    line-height: 30px !important;
+    padding-left: 12px !important;
+}*/
+
+.t-grid-row {
+    height: 35px;
+    line-height: 30px !important;
+    padding-left: 12px !important;
+}
+
+.transaction-approved {
+    color: lightgrey;
+}
+
+/****************************/
+/***  Grid plugin checker ***/
+/****************************/
+.x-grid-checkheader {
+    height: 14px;
+    background-image: url('../images/webapp/icons/unchecked.gif');
+    background-position: 50% -2px;
+    background-repeat: no-repeat;
+    background-color: transparent;
+}
+
+.x-grid-checkheader-checked {
+    background-image: url('../images/webapp/icons/checked.gif');
+}
+
+.x-grid-checkheader-editor .x-form-cb-wrap {
+    text-align: center;
+}
+
+/*********************/
+/*** Notifications ***/
+/*********************/
+.ux-notification-light .x-window-header {
+    background-color: transparent;
+}
+
+body .ux-notification-light {
+    background-image: url('../images/webapp/notification_fader.png');
+}
+
+.ux-notification-light .x-window-body {
+    text-align: center;
+    padding: 15px 5px 18px 5px;
+    width: 200px;
+    background-color: transparent;
+    border: 0px solid white;
+}
+
+/**********************************/
+/*** Homemade 'desktop' widgets ***/
+/**********************************/
+.ux-widget-light .x-panel-header {
+    background-color: transparent;
+}
+
+body .ux-widget-light {
+    background-image: url('../images/webapp/notification_fader.png');
+}
+
+.ux-widget-light .x-panel-body {
+    text-align: center;
+    padding: 15px 5px 18px 5px;
+    width: 200px;
+    background-color: transparent;
+    border: 0px solid white;
+}
+
+.approved {
+    color: #AAA;
+}
+
+.confirmed {
+    color: green;
+}
+
+.warning {
+    color: red;
+}
+
+.process {
+    color: orange;
+}
+
+.unactive {
+    color: #AAA;
+}
+
+.grid-row-disabled {
+    color: lightgray;
+}
+
+.changed .x-grid-cell {
+    color: orange;
+}
+
+.textHighlight b, .textHighlight span {
+    /*color: #f18354 !important;*/
+    color: orange !important;
+}
+
+#poweredby {
+    position: absolute;
+    bottom: 20px;
+    right: 40px;
+    z-index: 15000;
+
+    /* IE 5-7 */
+    filter: alpha(opacity=80);
+    /* Netscape */
+    -moz-opacity: 0.8;
+    /* Safari 1.x */
+    -khtml-opacity: 0.8;
+    /* Good browsers */
+    opacity: 0.8;
+}
+
+#poweredby div {
+    position: relative;
+    width: 380px;
+    height: 44px;
+    /*background-image: url(../images/webapp/framework/Desktop_Logo_Tontrac.png);*/
+    background-image: url(../images/webapp/framework/Desktop_New_Logo_Tontrac.png);
+    background-repeat: no-repeat;
+}
+
+/***************************************************************************/
+/* The simple background image PNG does not work in IE6-8, but does in IE9 */
+/***************************************************************************/
+.x-ie6 #poweredby div,
+.x-ie7 #poweredby div,
+.x-ie8 #poweredby div {
+    background-image: none;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/powered-by-ext-js.png', sizingMethod='scale');
+}
+
+.bigFont {
+    font-size: 18px !important;
+}
+
+.featurelist {
+    float: right;
+    width: 16px;
+}
+
+#loadingImage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /*width: 295px;*/
+    width: 500px;
+    height: 106px;
+    margin-top: -53px;
+    margin-left: -250px;
+}
+
+.floatLeft {
+    float: left;
+}
+
+.floatRight {
+    float: right;
+}
+
+.hidden {
+    display: none;
+}
+
+.x-grid-row-summary .x-grid-cell-inner {
+    font-weight: bold;
+    font-size: 11px;
+    background: #f1f2f4;
+}
+
+/**********************************/
+/***   DOWNLOADS FEATURE GRID   ***/
+/**********************************/
+
+.tt-file {
+    padding: 5px;
+}
+
+.tt-file-name {
+    float: left;
+    font-size: 16px;
+}
+
+.tt-file-size {
+    float: right;
+}
+
+.tt-file-hint {
+    clear: both;
+    padding-top: 10px;
+    font-style: italic;
+}
+
+.footerText {
+    font-weight: bold !important;
+    line-height: 24;
+    letter-spacing: 1px;
+}
+
+.dispatch-missing .x-dispatch-cell {
+    background-color: #fcf8f3;
+    color: #fcf8f3;
+}
+
+.receipt-missing .x-receipt-cell {
+    background-color: #fcf8f3;
+    color: #fcf8f3;
+}
+
+.weighbridgeDashToday {
+    padding-left: 10px;
+    font-size: 12px;
+}
+
+.weighbridgeDashToday > b {
+    color: #faa528;
+}
+
+/**********************************/
+/***   Security Transactions    ***/
+/**********************************/
+.row-match {
+    /*color: #5cb85c;*/
+}
+
+.row-unmatch {
+    /*color: #f0ad4e;*/
+    color: #aaa;
+}
+
+.x-form-focus, textarea.x-form-focus {
+    /*border-color: #C0BCA7 !important;*/
+    /*border-color: orange !important;*/
+    border-color: lightsalmon !important;
+    /*background-color: orangered !important;*/
+    /*background-color: #FFFBE6 !important;*/
+}
+
+/*******************************/
+/***   Tickets By Product    ***/
+/*******************************/
+.matched-row {
+    color: #faa528;
+}
+
+.unmatched-row {
+    /*color: #f0ad4e;*/
+    /*color: #aaa;*/
+}
+
+/*******************************/
+/***   Haulier Dashboard     ***/
+/*******************************/
+.haulier-dashboard {
+    /*background-color: #fafafa;*/
+    /*background-color: #faf !important;*/
+}
+
+.haulier-dashboard-container {
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    -ms-transition: all 1s ease;
+    transition: all 1s ease;
+    max-width: 100%;
+    float: left;
+    text-align: center;
+    /*height: 200px;*/
+    width: 281px;
+    /*padding: 5px 8px 8px 8px;*/
+    background-color: #ffffff;
+    /*background-color: #fafafa;*/
+    /*background-color: red;*/
+    color: #777777;
+    overflow: hidden;
+    /*border: 1px solid transparent;*/
+    border: 1px solid #b9d4e8;
+    margin: 14px;
+}
+
+.haulier-dashboard-container:hover {
+    /*outline: 0 solid transparent;*/
+    border: 1px solid #3c9ee5;
+    /*-webkit-transform: scale(1.05);*/
+    /*-moz-transform: scale(1.05);*/
+    /*-ms-transform: scale(1.05);*/
+    /*-o-transform: scale(1.05);*/
+    /*transform: scale(1.05);*/
+}
+
+/*.overHaulierSiteDashboard {*/
+/*border: 6px solid #6AABE1;*/
+/*background: #FFFFFF;*/
+/*color: black;*/
+/*}*/
+
+.haulier-dashboard-organisation {
+    background-color: #3c9ee5;
+    color: #ffffff;
+    font-weight: bold;
+    letter-spacing: 1.2px;
+    padding: 10px;
+}
+
+.haulier-dashboard-weighbridge {
+    background-color: #b9d4e8;
+    color: #ffffff;
+    /*font-weight: bold;*/
+    letter-spacing: 1.2px;
+    padding: 4px;
+}
+
+.haulier-dashboard-container-spacing {
+    padding: 5px 8px 15px 8px;
+}
+
+.haulier-section-spacer {
+    margin-top: 5px;
+    /*background-color: #3c9ee5;*/
+}
+
+.haulier-dashboard-item-vehicles-onsite {
+}
+
+.haulier-dashboard-item-vehicles-onsite.orange {
+    color: #ff9f00;
+}
+
+.haulier-dashboard-item-avg-time-onsite {
+    color: #4CC790;
+}
+
+.haulier-dashboard-item-title {
+    margin: 3px;
+    padding: 4px 0 4px 0;
+    /*background-color: #E6E7EB;*/
+    background-color: #f5f5f5;
+    /*background-color: #ffffff;*/
+}
+
+.haulier-row-title {
+    margin: 20px 0 10px 0;
+}
+
+.haulier-row-title-label {
+    border-radius: 25px;
+    background-color: #E6E7EB;
+    color: #ffffff;
+    padding: 3px 10px;
+}
+
+.haulier-row-flex-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.haulier-column-half {
+    width: 50%;
+    justify-content: space-around;
+}
+
+.haulier-column-third {
+    width: 33%;
+    justify-content: space-around;
+}
+
+.haulier-circular-chart {
+    display: block;
+    margin: 10px auto;
+    max-width: 80%;
+    max-height: 80px;
+}
+
+.circle-bg {
+    fill: none;
+    stroke: #eee;
+    stroke-width: 3.8;
+}
+
+.circle {
+    fill: none;
+    stroke-width: 2.8;
+    stroke-linecap: round;
+    animation: progress 1s ease-out forwards;
+}
+
+.haulier-circular-chart.orange .circle {
+    stroke: #ff9f00;
+}
+
+.haulier-circular-chart.green .circle {
+    stroke: #4CC790;
+}
+
+.haulier-circular-chart.blue .circle {
+    stroke: #3c9ee5;
+}
+
+@keyframes progress {
+    0% {
+        stroke-dasharray: 0 100;
+    }
+}
+
+.percentage {
+    fill: #666;
+    font-family: sans-serif;
+    font-size: 0.5em;
+    text-anchor: middle;
+}
+
+h2.background {
+    position: relative;
+    z-index: 1;
+}
+
+h2.background:before {
+    border-top: 2px solid #dfdfdf;
+    /*border-top: 2px solid #3c9ee5;*/
+    /*border-top: 2px solid #5faee7;*/
+    content: "";
+    margin: 0 auto; /* this centers the line to the full width specified */
+    position: absolute; /* positioning must be absolute here, and relative positioning must be applied to the parent */
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 95%;
+    z-index: -1;
+}
+
+h2.background span {
+    /* to hide the lines from behind the text, you have to set the background color the same as the container */
+    background-color: #ffffff;
+    /*color: #3c9ee5;*/
+    color: #c1c1c1;
+    padding: 0 15px;
+}
+
+h3.background {
+    position: relative;
+    z-index: 1;
+    margin: 5px 0 10px 0;
+}
+
+h3.background:before {
+    border-top: 2px solid #dfdfdf;
+    /*border-top: 2px solid #3c9ee5;*/
+    /*border-top: 2px solid #5faee7;*/
+    content: "";
+    margin: 0 auto; /* this centers the line to the full width specified */
+    position: absolute; /* positioning must be absolute here, and relative positioning must be applied to the parent */
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 95%;
+    z-index: -1;
+}
+
+h3.background span {
+    /* to hide the lines from behind the text, you have to set the background color the same as the container */
+    background-color: #ffffff;
+    /*color: #3c9ee5;*/
+    color: #c1c1c1;
+    padding: 0 15px;
+}

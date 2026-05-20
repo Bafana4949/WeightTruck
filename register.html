@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WieghTruck | Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-page">
+        <div class="auth-card">
+            <div class="auth-brand">
+                <img src="app/logo/fa42db3f-3201-4345-a8d6-604093f66a2e.png" alt="WieghTruck Logo">
+                <div>
+                    <h1>WieghTruck</h1>
+                    <p>Start your mine logistics demo account.</p>
+                </div>
+            </div>
+            <h2>Create an account</h2>
+            <p>Register a new demo profile and proceed to the WieghTruck dashboard.</p>
+
+            <form id="register-form" class="auth-form">
+                <div class="form-group">
+                    <label for="register-company">Company Name</label>
+                    <input id="register-company" type="text" placeholder="Enter company or site name" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input id="register-username" type="text" placeholder="Choose a username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input id="register-password" type="password" placeholder="Create a password" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm-password">Confirm Password</label>
+                    <input id="register-confirm-password" type="password" placeholder="Repeat your password" required>
+                </div>
+                <div id="register-error" class="auth-error" style="display:none;"></div>
+
+                <div class="auth-actions">
+                    <button type="submit" class="btn-primary"><i class="fa-solid fa-user-plus"></i> Register</button>
+                    <a href="login.html" class="btn-text auth-link">Back to login</a>
+                </div>
+            </form>
+
+            <div class="auth-footer">
+                After registration you will be redirected to the WieghTruck demo dashboard.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const registerForm = document.getElementById('register-form');
+        const registerError = document.getElementById('register-error');
+
+        registerForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const company = document.getElementById('register-company').value.trim();
+            const username = document.getElementById('register-username').value.trim();
+            const password = document.getElementById('register-password').value.trim();
+            const confirmPassword = document.getElementById('register-confirm-password').value.trim();
+
+            if (!company || !username || !password || !confirmPassword) {
+                registerError.textContent = 'Please complete every field before continuing.';
+                registerError.style.display = 'block';
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                registerError.textContent = 'Passwords do not match. Please check and try again.';
+                registerError.style.display = 'block';
+                return;
+            }
+
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

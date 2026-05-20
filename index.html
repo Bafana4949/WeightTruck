@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WieghTruck | Supply Chain Intelligence for Mines</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <img class="logo-img" src="app/logo/fa42db3f-3201-4345-a8d6-604093f66a2e.png" alt="WieghTruck Logo">
+                <span class="logo-text">Wiegh<span>Truck</span></span>
+            </div>
+            <nav class="side-nav">
+                <a href="#" class="nav-item active" data-view="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+                <a href="#" class="nav-item" data-view="orders"><i class="fa-solid fa-file-invoice"></i> Orders</a>
+                <a href="#" class="nav-item" data-view="logistics"><i class="fa-solid fa-truck-moving"></i> Logistics</a>
+                <a href="#" class="nav-item" data-view="inventory"><i class="fa-solid fa-warehouse"></i> Inventory</a>
+                <a href="#" class="nav-item" data-view="reports"><i class="fa-solid fa-chart-line"></i> Reports</a>
+                <div class="nav-divider"></div>
+                <a href="#" class="nav-item" data-view="settings"><i class="fa-solid fa-gear"></i> Settings</a>
+                <a href="login.html" class="nav-item logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="header-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input id="main-search" type="text" placeholder="Search tickets, vehicles, orders...">
+                </div>
+                <div class="header-actions">
+                    <div class="notification-bell" id="notification-bell-btn">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="badge" id="notification-badge">3</span>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=Irfan+Zad&background=F2801E&color=fff" alt="User">
+                        <div class="user-info">
+                            <span class="user-name">Irfan Zad</span>
+                            <span class="user-role">Site Manager</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-scroll">
+                <!-- VIEW 1: DASHBOARD -->
+                <div id="dashboard-view" class="view-section active">
+                    <!-- Welcome Section -->
+                    <section class="hero-section">
+                        <div class="hero-text">
+                            <h1>Operational Overview</h1>
+                            <p id="current-date">Friday, May 15, 2026</p>
+                        </div>
+                        <div class="hero-actions">
+                            <button class="btn-primary" id="btn-create-order"><i class="fa-solid fa-plus"></i> Create New Order</button>
+                        </div>
+                    </section>
+
+                    <section class="integration-banner">
+                        <div>
+                            <strong>Ready for physical integration:</strong> WieghTruck is designed to support RFID cards, weighbridge telemetry, gate access control, and haulage tracking once live data is available.
+                        </div>
+                        <div class="panel-note">Current demo view uses simulated workflow data until hardware streams are connected.</div>
+                    </section>
+
+                    <section class="overview-grid">
+                        <div class="overview-card">
+                            <div class="overview-header">
+                                <span class="overview-badge">Gate Security</span>
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <h4>Automated Access Control</h4>
+                            <p>Pre-authorize trucks, verify driver credentials and legal compliance, and remove bias at the mine gate.</p>
+                        </div>
+                        <div class="overview-card">
+                            <div class="overview-header">
+                                <span class="overview-badge">Weighbridge</span>
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </div>
+                            <h4>Tap-and-Weigh Processing</h4>
+                            <p>Capture exact metric weights automatically from the scale and speed up weighbridge turnaround.</p>
+                        </div>
+                        <div class="overview-card">
+                            <div class="overview-header">
+                                <span class="overview-badge">Transit Tracking</span>
+                                <i class="fa-solid fa-route"></i>
+                            </div>
+                            <h4>Real-Time Route Monitoring</h4>
+                            <p>Monitor vehicle departures, arrival estimates, and route deviations for secure cargo movement.</p>
+                        </div>
+                        <div class="overview-card">
+                            <div class="overview-header">
+                                <span class="overview-badge">Reconciliation</span>
+                                <i class="fa-solid fa-file-invoice-dollar"></i>
+                            </div>
+                            <h4>Anti-Theft Reconciliation</h4>
+                            <p>Compare dispatch and receiving weights automatically and flag discrepancies for investigation.</p>
+                        </div>
+                    </section>
+
+                    <!-- KPI Cards -->
+                    <section class="kpi-grid">
+                        <div class="kpi-card active-orders-kpi">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Active Orders</span>
+                                <i class="fa-solid fa-clipboard-list"></i>
+                            </div>
+                            <div class="kpi-value" id="kpi-active-orders">12</div>
+                            <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> 8% vs yesterday</div>
+                        </div>
+                        <div class="kpi-card tonnage-kpi">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Tonnage Today</span>
+                                <i class="fa-solid fa-weight-hanging"></i>
+                            </div>
+                            <div class="kpi-value" id="kpi-tonnage-today">1,240 <small>t</small></div>
+                            <div class="kpi-trend down"><i class="fa-solid fa-arrow-down"></i> 2.4% vs target</div>
+                        </div>
+                        <div class="kpi-card vehicles-kpi">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Vehicles In Pit</span>
+                                <i class="fa-solid fa-truck"></i>
+                            </div>
+                            <div class="kpi-value" id="kpi-vehicles-in-pit">24</div>
+                            <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> 4 active now</div>
+                        </div>
+                        <div class="kpi-card efficiency-kpi">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Site Efficiency</span>
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <div class="kpi-value" id="kpi-efficiency">94%</div>
+                            <div class="kpi-trend neutral">Stable</div>
+                        </div>
+                    </section>
+
+                    <div class="data-layout">
+                        <!-- How WieghTruck Works -->
+                        <div class="data-panel full-row workflow-panel">
+                            <div class="panel-header">
+                                <h3>How WieghTruck Works</h3>
+                                <span class="panel-note">No live RFID or weighbridge stream connected yet; this is the platform workflow vision.</span>
+                            </div>
+                            <div class="workflow-steps">
+                                <div class="workflow-step">
+                                    <h4>1. Pre-Registration</h4>
+                                    <p>Register hauliers, drivers, vehicles and create digital cargo orders before dispatch.</p>
+                                </div>
+                                <div class="workflow-step">
+                                    <h4>2. Gate Verification</h4>
+                                    <p>Validate active orders, driver credentials, and site compliance automatically at the gate.</p>
+                                </div>
+                                <div class="workflow-step">
+                                    <h4>3. Automated Weighing</h4>
+                                    <p>Capture exact weights from the scale, generate digital weighbridge tickets, and clear trucks quickly.</p>
+                                </div>
+                                <div class="workflow-step">
+                                    <h4>4. Reconciliation</h4>
+                                    <p>Compare dispatch and receiving weights to flag discrepancies and prevent product theft.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Live Feed Table -->
+                        <div class="data-panel table-panel">
+                            <div class="panel-header">
+                                <h3>Live Weighbridge Feed</h3>
+                                <div class="panel-actions">
+                                    <input id="feed-search" type="search" class="search-input" placeholder="Search tickets, vehicle or product" />
+                                    <button class="btn-text" id="btn-view-all-feed">View All <i class="fa-solid fa-chevron-right"></i></button>
+                                </div>
+                            </div>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Ticket #</th>
+                                            <th>Vehicle</th>
+                                            <th>Product</th>
+                                            <th>Gross</th>
+                                            <th>Net</th>
+                                            <th>Time</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="weighbridge-feed">
+                                        <!-- Data injected by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Gate Access Control Panel -->
+                        <div class="data-panel gate-panel">
+                            <div class="panel-header">
+                                <h3>Gate Access Control <span class="badge-live"><i class="fa-solid fa-circle-dot"></i> LIVE</span></h3>
+                            </div>
+                            <div class="gate-feed-container">
+                                <div class="gate-feed" id="gate-feed">
+                                    <!-- Data injected by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dual Ticket Analytics Panel -->
+                        <div class="data-panel dual-ticket-panel">
+                            <div class="panel-header">
+                                <h3>Dual Ticket Analytics <span class="badge-new">LIVE VARIANCE</span></h3>
+                                <div class="ticket-selector">
+                                    <select id="ticket-comparison-select">
+                                        <option value="1">Ticket Pair T-84210 (GP-142-TR)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="dual-comparison-grid">
+                                <div class="ticket-side dispatch">
+                                    <div class="ticket-header">DISPATCH <i class="fa-solid fa-upload"></i></div>
+                                    <div class="ticket-row"><label>Ticket No:</label> <span id="disp-no">D-11029</span></div>
+                                    <div class="ticket-row"><label>Source:</label> <span id="disp-src">Primary Pit A</span></div>
+                                    <div class="ticket-row"><label>Nett Weight:</label> <span id="disp-weight" class="weight">34.10 t</span></div>
+                                    <div class="ticket-row"><label>Timestamp:</label> <span id="disp-time">2026-05-15 14:20</span></div>
+                                </div>
+                                <div class="variance-meter">
+                                    <div class="variance-value" id="variance-val">1.2%</div>
+                                    <div class="variance-label">MASS VARIANCE</div>
+                                    <div class="variance-arrow"><i class="fa-solid fa-right-left"></i></div>
+                                    <div class="variance-status ok" id="variance-status">ACCEPTED</div>
+                                </div>
+                                <div class="ticket-side receipt">
+                                    <div class="ticket-header">RECEIPT <i class="fa-solid fa-download"></i></div>
+                                    <div class="ticket-row"><label>Ticket No:</label> <span id="rect-no">R-55902</span></div>
+                                    <div class="ticket-row"><label>Destination:</label> <span id="rect-dest">Stockpile C</span></div>
+                                    <div class="ticket-row"><label>Nett Weight:</label> <span id="rect-weight" class="weight">33.69 t</span></div>
+                                    <div class="ticket-row"><label>Timestamp:</label> <span id="rect-time">2026-05-15 15:45</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Transit & Security Map -->
+                        <div class="data-panel chart-panel">
+                            <div class="panel-header">
+                                <h3>Live Transit & Security</h3>
+                                <div class="panel-controls">
+                                    <span>Telemetry</span>
+                                    <div class="toggle active" id="telemetry-toggle-btn"></div>
+                                </div>
+                            </div>
+                            <div class="map-placeholder">
+                                <div class="map-overlay">
+                                    <div class="transit-route">
+                                        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                                            <path id="svg-route-line" d="M10,90 Q40,50 90,10" stroke="rgba(6, 182, 212, 0.4)" stroke-width="2.5" fill="none" stroke-dasharray="6" class="route-path" />
+                                        </svg>
+                                    </div>
+                                    <div class="marker truck-marker pulse" style="top: 50%; left: 50%;" id="moving-truck">
+                                        <i class="fa-solid fa-truck"></i>
+                                        <div class="marker-tooltip">
+                                            <strong id="moving-truck-reg">GP-142-TR</strong><br>
+                                            Status: <span id="moving-truck-status">Moving</span><br>
+                                            <span class="status-ok" id="moving-truck-deviation">No Deviations</span>
+                                        </div>
+                                    </div>
+                                    <div class="marker alert-marker pulse-danger" style="top: 25%; left: 70%;">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                        <div class="marker-tooltip">
+                                            <strong>NW-441-RT</strong><br>
+                                            Route Deviation<br>
+                                            <span class="status-danger">Security Alert!</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: ORDERS MANAGEMENT -->
+                <div id="orders-view" class="view-section">
+                    <section class="hero-section">
+                        <div class="hero-text">
+                            <h1>Orders & Allocations</h1>
+                            <p>Manage digital cargo orders, assign logistics firms, and authorize fleets.</p>
+                        </div>
+                        <div class="hero-actions">
+                            <button class="btn-primary" id="btn-create-order-tab"><i class="fa-solid fa-plus"></i> Create New Order</button>
+                        </div>
+                    </section>
+
+                    <div class="orders-table-card">
+                        <div class="panel-header">
+                            <h3>Active Order Contracts</h3>
+                            <div class="panel-actions">
+                                <input id="orders-search" type="search" class="search-input" placeholder="Search orders by customer or product..." />
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Type</th>
+                                        <th>Product</th>
+                                        <th>Client/Partner</th>
+                                        <th>Target Mass</th>
+                                        <th>Allocated</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orders-list-body">
+                                    <!-- Dynamic rows from appState -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 3: LOGISTICS TELEMETRY -->
+                <div id="logistics-view" class="view-section">
+                    <section class="hero-section">
+                        <div class="hero-text">
+                            <h1>Transit & Telemetry Monitoring</h1>
+                            <p>Real-time vehicle position, geofencing violations, and haulage speed trackers.</p>
+                        </div>
+                    </section>
+
+                    <div class="data-layout">
+                        <div class="data-panel table-panel">
+                            <div class="panel-header">
+                                <h3>Active Transit Vehicles</h3>
+                                <span class="panel-note">Simulated GPS telemetry data from vehicles within geofence boundaries</span>
+                            </div>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Registration</th>
+                                            <th>Driver</th>
+                                            <th>Current Speed</th>
+                                            <th>Route Location</th>
+                                            <th>Destination</th>
+                                            <th>Signal Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="transit-vehicles-list">
+                                        <!-- Injected by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="data-panel chart-panel">
+                            <div class="panel-header">
+                                <h3>Telemetry Monitor</h3>
+                            </div>
+                            <div class="map-placeholder" style="height: 310px;">
+                                <div class="map-overlay">
+                                    <div class="transit-route">
+                                        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="height:100%; width:100%;">
+                                            <path d="M10,90 Q40,50 90,10" stroke="rgba(6, 182, 212, 0.4)" stroke-width="2.5" fill="none" stroke-dasharray="6" class="route-path" />
+                                            <path d="M10,90 Q15,40 55,50 T90,10" stroke="rgba(249, 115, 22, 0.2)" stroke-width="1.5" fill="none" />
+                                        </svg>
+                                    </div>
+                                    <div class="marker truck-marker pulse" style="top: 50%; left: 50%;" id="logistics-truck-1">
+                                        <i class="fa-solid fa-truck"></i>
+                                        <div class="marker-tooltip">
+                                            <strong>GP-142-TR</strong><br>
+                                            Speed: 42 km/h<br>
+                                            <span class="status-ok">Normal Path</span>
+                                        </div>
+                                    </div>
+                                    <div class="marker alert-marker pulse-danger" style="top: 35%; left: 32%;" id="logistics-truck-2">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                        <div class="marker-tooltip">
+                                            <strong>NW-441-RT</strong><br>
+                                            Deviation Detected<br>
+                                            <span class="status-danger">Off Route Alert</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 4: INVENTORY LEVELS -->
+                <div id="inventory-view" class="view-section">
+                    <section class="hero-section">
+                        <div class="hero-text">
+                            <h1>Inventory & Stockpile Management</h1>
+                            <p>Real-time stockpile status, product allocations, and terminal intake capacities.</p>
+                        </div>
+                    </section>
+
+                    <div class="stockpiles-grid" id="stockpiles-grid-container">
+                        <!-- Dynamic stockpile cards -->
+                    </div>
+
+                    <div class="orders-table-card">
+                        <div class="panel-header">
+                            <h3>Recent Inventory Intake logs</h3>
+                            <span class="panel-note">Reconciled load receipts matching stockpile arrivals</span>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>Stockpile Target</th>
+                                        <th>Product</th>
+                                        <th>Received Mass</th>
+                                        <th>Delivering Haulier</th>
+                                        <th>Vehicle Registration</th>
+                                        <th>Verification</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventory-logs-body">
+                                    <!-- Injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 5: REPORTS & STATS -->
+                <div id="reports-view" class="view-section">
+                    <section class="hero-section">
+                        <div class="hero-text">
+                            <h1>Operational Reporting & Analytics</h1>
+                            <p>Weighbridge load patterns, haulier compliance, and variance telemetry audits.</p>
+                        </div>
+                    </section>
+
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <div class="panel-header">
+                                <h3>Weighbridge Tonnage (Last 7 Days)</h3>
+                                <span class="panel-note">Tons of product processed per day</span>
+                            </div>
+                            <div class="chart-wrapper">
+                                <svg class="svg-chart" id="tonnage-line-chart" viewBox="0 0 600 240">
+                                    <defs>
+                                        <linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="var(--primary-amber)" stop-opacity="0.3"></stop>
+                                            <stop offset="100%" stop-color="var(--primary-amber)" stop-opacity="0.0"></stop>
+                                        </linearGradient>
+                                    </defs>
+                                    <!-- Gridlines -->
+                                    <line x1="50" y1="30" x2="570" y2="30" class="chart-gridline"></line>
+                                    <line x1="50" y1="80" x2="570" y2="80" class="chart-gridline"></line>
+                                    <line x1="50" y1="130" x2="570" y2="130" class="chart-gridline"></line>
+                                    <line x1="50" y1="180" x2="570" y2="180" class="chart-gridline"></line>
+                                    
+                                    <!-- Chart Area fill -->
+                                    <path d="" class="chart-line-area" id="chart-area-path"></path>
+                                    <!-- Chart Line -->
+                                    <path d="" class="chart-line" id="chart-line-path"></path>
+                                    <!-- Data Points -->
+                                    <g id="chart-points-group"></g>
+                                    <!-- Axis labels -->
+                                    <g id="chart-labels-group"></g>
+                                </svg>
+                                <div class="chart-tooltip-bubble" id="chart-tooltip"></div>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="panel-header">
+                                <h3>Product Breakdown</h3>
+                                <span class="panel-note">Current distribution of processed product tons</span>
+                            </div>
+                            <div class="chart-wrapper">
+                                <svg class="svg-chart" id="product-bar-chart" viewBox="0 0 260 240">
+                                    <line x1="40" y1="180" x2="240" y2="180" stroke="rgba(255,255,255,0.1)"></line>
+                                    <!-- Dynamic bars from JS -->
+                                    <g id="bar-chart-content"></g>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 6: SETTINGS -->
+                <div id="settings-view" class="view-section">
+                    <section class="hero-section">
+                        <div class="hero-text">
+                            <h1>System Configuration</h1>
+                            <p>Modify threshold tolerances, telemetry feed speed, and simulation options.</p>
+                        </div>
+                    </section>
+
+                    <div class="settings-grid">
+                        <div class="settings-card">
+                            <div class="panel-header">
+                                <h3>Telemetry & Simulation Rules</h3>
+                            </div>
+                            <div class="settings-item">
+                                <div class="settings-info">
+                                    <label>Active Demo Simulation</label>
+                                    <span>Pushes randomized weighbridge logs and security gate events.</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="settings-toggle-simulation" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-item">
+                                <div class="settings-info">
+                                    <label>Simulation Interval (Seconds)</label>
+                                    <span>Adjust speed of telemetry events generated (10s to 30s).</span>
+                                </div>
+                                <input type="range" id="settings-simulation-speed" min="10" max="30" value="15" style="width:110px; accent-color:var(--primary-amber);">
+                            </div>
+                            <div class="settings-item">
+                                <div class="settings-info">
+                                    <label>Auto-Reconcile Variance Threshold</label>
+                                    <span>Flags ticket comparison discrepancy checks above this percentage.</span>
+                                </div>
+                                <input type="number" id="settings-variance-threshold" value="2.0" step="0.1" style="width: 80px; text-align: center;">
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="panel-header">
+                                <h3>Contract Rates & Fees</h3>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1.25rem;">
+                                <label>Default Base Tonnage Rate (ZAR/ton)</label>
+                                <input type="number" id="settings-rate-per-ton" value="450.00" step="10">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1.25rem;">
+                                <label>Target Daily Tonnage Limit (tons)</label>
+                                <input type="number" id="settings-daily-target" value="1300">
+                            </div>
+                            <button class="btn-primary" id="btn-save-settings" style="width: 100%; justify-content: center;"><i class="fa-solid fa-floppy-disk"></i> Save Configurations</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- NOTIFICATION DRAWER -->
+    <div class="notification-drawer" id="notification-drawer">
+        <div class="drawer-header">
+            <h3>System Warning Log</h3>
+            <button class="close-modal" id="close-notification-drawer-btn">&times;</button>
+        </div>
+        <div class="drawer-content" id="notification-drawer-content">
+            <!-- Notifications list injected by JS -->
+        </div>
+    </div>
+
+    <!-- MODAL: Create/Edit Order -->
+    <div id="order-modal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Manage Weighbridge Order</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-tabs">
+                <button class="tab-btn active" data-tab="general">General Information</button>
+                <button class="tab-btn" data-tab="hauliers">Assigned Hauliers</button>
+            </div>
+            <div class="modal-body">
+                <!-- Tab: General -->
+                <div id="tab-general" class="tab-content active">
+                    <form id="order-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Transaction Type</label>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="IsReceipt" value="0" checked> Dispatch</label>
+                                    <label><input type="radio" name="IsReceipt" value="1"> Receipt</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Weighbridge</label>
+                                <select name="WeighbridgeId" id="comboWeighbridgeId">
+                                    <option value="1">Main Weighbridge 01</option>
+                                    <option value="2">North Exit WB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Customer</label>
+                                <select name="CustomerId" id="comboCustomerId">
+                                    <option value="101">Glencore Operations</option>
+                                    <option value="102">Exxaro Resources</option>
+                                    <option value="201">My Organisation (Irfan Zad)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Supplier</label>
+                                <select name="SupplierId" id="comboSupplierId" disabled>
+                                    <option value="201">My Organisation (Irfan Zad)</option>
+                                    <option value="301">Sasol Mining</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Product</label>
+                                <select name="ProductId" id="comboProductId">
+                                    <option value="10">Anthracite Pea</option>
+                                    <option value="11">RB1 Export</option>
+                                    <option value="12">Duff</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Estimated Order Mass (t)</label>
+                                <input type="number" name="EstimatedMass" id="orderEstimatedMass" value="34.00" step="0.01">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Stockpile</label>
+                                <select name="StockPileId" id="comboStockPileId">
+                                    <option value="0">Default Stockpile</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Variance Threshold (%)</label>
+                                <input type="number" name="Threshold" step="0.1" value="2.0">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Threshold (Tons)</label>
+                                <input type="number" name="ThresholdTons" step="0.01" value="0.50">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Rate Per Ton (ZAR)</label>
+                                <input type="number" name="RatePerTon" value="450.00">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label>Order Notes / Special Instructions</label>
+                                <textarea name="OrderNote" placeholder="e.g. Moisture adjustment details..."></textarea>
+                            </div>
+                        </div>
+                        <div id="order-note-container" class="order-note-alert" style="margin-top: 1rem; display: none;">
+                            <i class="fa-solid fa-circle-info"></i> <span id="order-note-text"></span>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tab: Hauliers -->
+                <div id="tab-hauliers" class="tab-content">
+                    <div class="haulier-controls">
+                        <div class="mass-summary">
+                            <div class="summary-item">
+                                <span class="label">Total Mass</span>
+                                <span class="value" id="displayTotalOrderMass">34.00 t</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Allocated</span>
+                                <span class="value success" id="displayAllocatedMass">0.00 t</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Unallocated</span>
+                                <span class="value warning" id="displayUnallocatedMass">34.00 t</span>
+                            </div>
+                        </div>
+                        <button class="btn-secondary" id="btn-add-haulier"><i class="fa-solid fa-truck-ramp-box"></i> Add Haulier</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="gridHaulierList">
+                            <thead>
+                                <tr>
+                                    <th>Haulier Name</th>
+                                    <th>Allocated Mass</th>
+                                    <th>Vehicles</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-text close-modal">Cancel</button>
+                <button class="btn-primary" id="btn-save-order">Save Order & Sync</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Add Haulier -->
+    <div id="haulier-modal" class="modal">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h2>Add Haulier to Order</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="haulier-form">
+                    <div class="form-group">
+                        <label>Select Haulier</label>
+                        <select id="comboHaulierId">
+                            <option value="501">Unitrans Supply Chain</option>
+                            <option value="502">Barloworld Logistics</option>
+                            <option value="503">Imperial Logistics</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Estimated Mass (t)</label>
+                        <input type="number" id="haulierEstimatedMass" placeholder="0.00">
+                        <small>Max available: <span id="maxAvailableMass">34.00</span> t</small>
+                        <p class="form-help" id="haulier-error" hidden></p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-text close-modal">Cancel</button>
+                <button class="btn-primary" id="btn-save-haulier">Add Haulier</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Vehicle Assignment -->
+    <div id="vehicle-modal" class="modal">
+        <div class="modal-content medium">
+            <div class="modal-header">
+                <h2 id="vehicle-modal-title">Authorised Vehicles</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="vehicle-picker-container">
+                    <div class="picker-panel">
+                        <div class="picker-header">
+                            <h3>Available (<span id="displayAvailableVehicles">0</span>)</h3>
+                            <div class="picker-filter" style="margin-top: 5px;">
+                                <label><input type="checkbox" id="checkboxShowNonInducted" checked> Inducted Only</label>
+                            </div>
+                        </div>
+                        <div class="picker-list" id="list-available">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                    <div class="picker-controls">
+                        <button class="btn-icon" id="btn-assign-all"><i class="fa-solid fa-angles-right"></i></button>
+                        <button class="btn-icon" id="btn-remove-all"><i class="fa-solid fa-angles-left"></i></button>
+                    </div>
+                    <div class="picker-panel">
+                        <div class="picker-header">
+                            <h3>Assigned (<span id="displayAssignedVehicles">0</span>)</h3>
+                        </div>
+                        <div class="picker-list" id="list-assigned">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary close-modal">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
