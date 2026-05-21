@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WieghTruck | Login</title>
+    <title>WeighTruck | Login</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,17 +11,27 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <script>
+        if ((localStorage.getItem('weightruck_theme') || localStorage.getItem('wieghtruck_theme')) === 'light') {
+            document.body.classList.add('light-theme');
+        }
+    </script>
+    
+    <div class="theme-toggle floating-theme-toggle" id="theme-toggle-btn" title="Toggle Light/Dark Theme">
+        <i class="fa-solid fa-moon"></i>
+    </div>
+
     <div class="login-page">
         <div class="auth-card">
             <div class="auth-brand">
-                <img src="app/logo/fa42db3f-3201-4345-a8d6-604093f66a2e.png" alt="WieghTruck Logo">
+                <img src="app/logo/fa42db3f-3201-4345-a8d6-604093f66a2e.png" alt="WeighTruck Logo">
                 <div>
-                    <h1>WieghTruck</h1>
+                    <h1>WeighTruck</h1>
                     <p>Supply chain intelligence for mine logistics.</p>
                 </div>
             </div>
             <h2>Welcome back</h2>
-            <p>Sign in to continue to your WieghTruck dashboard and manage orders, vehicles, and weighbridge workflows.</p>
+            <p>Sign in to continue to your WeighTruck dashboard and manage orders, vehicles, and weighbridge workflows.</p>
 
             <form id="login-form" class="auth-form">
                 <div class="form-group">
@@ -41,7 +51,7 @@
             </form>
 
             <div class="auth-footer">
-                Demo credentials: <strong>demo</strong> / <strong>wieghtruck</strong>.<br>
+                Demo credentials: <strong>demo</strong> / <strong>weightruck</strong>.<br>
                 Or use any credentials to navigate to the dashboard in demo mode.
             </div>
         </div>
@@ -62,13 +72,30 @@
                 return;
             }
 
-            if (username.toLowerCase() === 'demo' && password.toLowerCase() === 'wieghtruck') {
+            if (username.toLowerCase() === 'demo' && (password.toLowerCase() === 'weightruck' || password.toLowerCase() === 'wieghtruck')) {
                 window.location.href = 'index.html';
                 return;
             }
 
-            loginError.textContent = 'Invalid credentials. Please try demo / wieghtruck or create a new account.';
-            loginError.style.display = 'block';
+            window.location.href = 'index.html';
+        });
+
+        // Theme Toggle Logic
+        const themeBtn = document.getElementById('theme-toggle-btn');
+        function updateThemeIcon() {
+            const icon = themeBtn.querySelector('i');
+            if (document.body.classList.contains('light-theme')) {
+                icon.className = 'fa-solid fa-sun';
+            } else {
+                icon.className = 'fa-solid fa-moon';
+            }
+        }
+        updateThemeIcon();
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            localStorage.setItem('weightruck_theme', isLight ? 'light' : 'dark');
+            updateThemeIcon();
         });
     </script>
 </body>

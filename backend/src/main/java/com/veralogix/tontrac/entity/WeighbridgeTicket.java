@@ -26,4 +26,34 @@ public class WeighbridgeTicket {
     private String status;
     private String time;
     private LocalDateTime createdDate;
+
+    // Expanded logistics fields
+    private String mineSite;
+    private String originWeighbridge;
+    private String destination;
+    private String driverName;
+    private String trailerReg;
+    private Double tareWeight;
+    private Double grossWeight;
+    private Double netWeight;
+    private Double destinationWeight;
+    private Double variance;
+    private String reconciliationStatus; // e.g. Matched, Minor Variance, Major Discrepancy, Unreconciled
+    private Double ratePerTon;
+    private Double totalAmount;
+    private String invoiceStatus; // Pending, Invoiced
+
+    // Constructor for backwards compatibility during seeding
+    public WeighbridgeTicket(Long id, String ticketId, String reg, String prod, Double gross, Double net, String status, String time, LocalDateTime createdDate) {
+        this.id = id;
+        this.ticketId = ticketId;
+        this.reg = reg;
+        this.prod = prod;
+        this.gross = gross;
+        this.net = net;
+        this.status = status;
+        this.time = time;
+        this.createdDate = createdDate;
+    }
 }
+

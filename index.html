@@ -1,31 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WieghTruck | Supply Chain Intelligence for Mines</title>
+    <title>WeighTruck | Supply Chain Intelligence for Mines</title>
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Main Style -->
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+    <script>
+        if ((localStorage.getItem('weightruck_theme') || localStorage.getItem('wieghtruck_theme')) === 'light') {
+            document.body.classList.add('light-theme');
+        }
+    </script>
     <div class="app-container">
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="logo-container">
-                <img class="logo-img" src="app/logo/fa42db3f-3201-4345-a8d6-604093f66a2e.png" alt="WieghTruck Logo">
-                <span class="logo-text">Wiegh<span>Truck</span></span>
+                <img class="logo-img" src="app/logo/fa42db3f-3201-4345-a8d6-604093f66a2e.png" alt="WeighTruck Logo">
+                <span class="logo-text">Weigh<span>Truck</span></span>
             </div>
             <nav class="side-nav">
-                <a href="#" class="nav-item active" data-view="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+                <a href="#" class="nav-item active" data-view="dashboard"><i class="fa-solid fa-gauge-high"></i>
+                    Dashboard</a>
                 <a href="#" class="nav-item" data-view="orders"><i class="fa-solid fa-file-invoice"></i> Orders</a>
-                <a href="#" class="nav-item" data-view="logistics"><i class="fa-solid fa-truck-moving"></i> Logistics</a>
+                <a href="#" class="nav-item" data-view="logistics"><i class="fa-solid fa-truck-moving"></i>
+                    Logistics</a>
                 <a href="#" class="nav-item" data-view="inventory"><i class="fa-solid fa-warehouse"></i> Inventory</a>
                 <a href="#" class="nav-item" data-view="reports"><i class="fa-solid fa-chart-line"></i> Reports</a>
+                <div class="nav-divider" data-group="master-data"></div>
+                <a href="#" class="nav-item" data-view="sites"><i class="fa-solid fa-location-dot"></i> Sites &
+                    Locations</a>
+                <a href="#" class="nav-item" data-view="fleets"><i class="fa-solid fa-truck-flatbed"></i> Fleets &
+                    Drivers</a>
+                <div class="nav-divider" data-group="control"></div>
+                <a href="#" class="nav-item" data-view="weighbridge-sim"><i class="fa-solid fa-scale-balanced"></i>
+                    Weighbridge Sim</a>
+                <a href="#" class="nav-item" data-view="reconciliation"><i class="fa-solid fa-right-left"></i>
+                    Reconciliation</a>
+                <a href="#" class="nav-item" data-view="alerts-center"><i class="fa-solid fa-circle-exclamation"></i>
+                    Alerts Center</a>
+                <a href="#" class="nav-item" data-view="billing"><i class="fa-solid fa-file-invoice-dollar"></i> Billing
+                    Readiness</a>
                 <div class="nav-divider"></div>
                 <a href="#" class="nav-item" data-view="settings"><i class="fa-solid fa-gear"></i> Settings</a>
                 <a href="login.html" class="nav-item logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
@@ -40,6 +65,21 @@
                     <input id="main-search" type="text" placeholder="Search tickets, vehicles, orders...">
                 </div>
                 <div class="header-actions">
+                    <div class="role-switcher-container">
+                        <i class="fa-solid fa-user-shield role-switcher-icon"></i>
+                        <select id="role-switcher-select" class="role-switcher-select">
+                            <option value="Super Admin">Super Admin</option>
+                            <option value="Mine Manager" selected>Mine Manager</option>
+                            <option value="Weighbridge Operator">Weighbridge Operator</option>
+                            <option value="Transport Manager">Transport Manager</option>
+                            <option value="Driver">Driver (Mobile View)</option>
+                            <option value="Compliance Officer">Compliance Officer</option>
+                            <option value="Customer">Customer</option>
+                        </select>
+                    </div>
+                    <div class="theme-toggle" id="theme-toggle-btn" title="Toggle Light/Dark Theme">
+                        <i class="fa-solid fa-moon"></i>
+                    </div>
                     <div class="notification-bell" id="notification-bell-btn">
                         <i class="fa-solid fa-bell"></i>
                         <span class="badge" id="notification-badge">3</span>
@@ -47,8 +87,8 @@
                     <div class="user-profile">
                         <img src="https://ui-avatars.com/api/?name=Irfan+Zad&background=F2801E&color=fff" alt="User">
                         <div class="user-info">
-                            <span class="user-name">Irfan Zad</span>
-                            <span class="user-role">Site Manager</span>
+                            <span class="user-name" id="profile-user-name">Irfan Zad</span>
+                            <span class="user-role" id="profile-user-role">Mine Manager</span>
                         </div>
                     </div>
                 </div>
@@ -64,15 +104,19 @@
                             <p id="current-date">Friday, May 15, 2026</p>
                         </div>
                         <div class="hero-actions">
-                            <button class="btn-primary" id="btn-create-order"><i class="fa-solid fa-plus"></i> Create New Order</button>
+                            <button class="btn-primary" id="btn-create-order"><i class="fa-solid fa-plus"></i> Create
+                                New Order</button>
                         </div>
                     </section>
 
                     <section class="integration-banner">
                         <div>
-                            <strong>Ready for physical integration:</strong> WieghTruck is designed to support RFID cards, weighbridge telemetry, gate access control, and haulage tracking once live data is available.
+                            <strong>Ready for physical integration:</strong> WeighTruck is designed to support RFID
+                            cards, weighbridge telemetry, gate access control, and haulage tracking once live data is
+                            available.
                         </div>
-                        <div class="panel-note">Current demo view uses simulated workflow data until hardware streams are connected.</div>
+                        <div class="panel-note">Current demo view uses simulated workflow data until hardware streams
+                            are connected.</div>
                     </section>
 
                     <section class="overview-grid">
@@ -82,7 +126,8 @@
                                 <i class="fa-solid fa-shield-halved"></i>
                             </div>
                             <h4>Automated Access Control</h4>
-                            <p>Pre-authorize trucks, verify driver credentials and legal compliance, and remove bias at the mine gate.</p>
+                            <p>Pre-authorize trucks, verify driver credentials and legal compliance, and remove bias at
+                                the mine gate.</p>
                         </div>
                         <div class="overview-card">
                             <div class="overview-header">
@@ -90,7 +135,8 @@
                                 <i class="fa-solid fa-scale-balanced"></i>
                             </div>
                             <h4>Tap-and-Weigh Processing</h4>
-                            <p>Capture exact metric weights automatically from the scale and speed up weighbridge turnaround.</p>
+                            <p>Capture exact metric weights automatically from the scale and speed up weighbridge
+                                turnaround.</p>
                         </div>
                         <div class="overview-card">
                             <div class="overview-header">
@@ -98,7 +144,8 @@
                                 <i class="fa-solid fa-route"></i>
                             </div>
                             <h4>Real-Time Route Monitoring</h4>
-                            <p>Monitor vehicle departures, arrival estimates, and route deviations for secure cargo movement.</p>
+                            <p>Monitor vehicle departures, arrival estimates, and route deviations for secure cargo
+                                movement.</p>
                         </div>
                         <div class="overview-card">
                             <div class="overview-header">
@@ -106,7 +153,8 @@
                                 <i class="fa-solid fa-file-invoice-dollar"></i>
                             </div>
                             <h4>Anti-Theft Reconciliation</h4>
-                            <p>Compare dispatch and receiving weights automatically and flag discrepancies for investigation.</p>
+                            <p>Compare dispatch and receiving weights automatically and flag discrepancies for
+                                investigation.</p>
                         </div>
                     </section>
 
@@ -147,28 +195,33 @@
                     </section>
 
                     <div class="data-layout">
-                        <!-- How WieghTruck Works -->
+                        <!-- How WeighTruck Works -->
                         <div class="data-panel full-row workflow-panel">
                             <div class="panel-header">
-                                <h3>How WieghTruck Works</h3>
-                                <span class="panel-note">No live RFID or weighbridge stream connected yet; this is the platform workflow vision.</span>
+                                <h3>How WeighTruck Works</h3>
+                                <span class="panel-note">No live RFID or weighbridge stream connected yet; this is the
+                                    platform workflow vision.</span>
                             </div>
                             <div class="workflow-steps">
                                 <div class="workflow-step">
                                     <h4>1. Pre-Registration</h4>
-                                    <p>Register hauliers, drivers, vehicles and create digital cargo orders before dispatch.</p>
+                                    <p>Register hauliers, drivers, vehicles and create digital cargo orders before
+                                        dispatch.</p>
                                 </div>
                                 <div class="workflow-step">
                                     <h4>2. Gate Verification</h4>
-                                    <p>Validate active orders, driver credentials, and site compliance automatically at the gate.</p>
+                                    <p>Validate active orders, driver credentials, and site compliance automatically at
+                                        the gate.</p>
                                 </div>
                                 <div class="workflow-step">
                                     <h4>3. Automated Weighing</h4>
-                                    <p>Capture exact weights from the scale, generate digital weighbridge tickets, and clear trucks quickly.</p>
+                                    <p>Capture exact weights from the scale, generate digital weighbridge tickets, and
+                                        clear trucks quickly.</p>
                                 </div>
                                 <div class="workflow-step">
                                     <h4>4. Reconciliation</h4>
-                                    <p>Compare dispatch and receiving weights to flag discrepancies and prevent product theft.</p>
+                                    <p>Compare dispatch and receiving weights to flag discrepancies and prevent product
+                                        theft.</p>
                                 </div>
                             </div>
                         </div>
@@ -178,8 +231,10 @@
                             <div class="panel-header">
                                 <h3>Live Weighbridge Feed</h3>
                                 <div class="panel-actions">
-                                    <input id="feed-search" type="search" class="search-input" placeholder="Search tickets, vehicle or product" />
-                                    <button class="btn-text" id="btn-view-all-feed">View All <i class="fa-solid fa-chevron-right"></i></button>
+                                    <input id="feed-search" type="search" class="search-input"
+                                        placeholder="Search tickets, vehicle or product" />
+                                    <button class="btn-text" id="btn-view-all-feed">View All <i
+                                            class="fa-solid fa-chevron-right"></i></button>
                                 </div>
                             </div>
                             <div class="table-container">
@@ -205,7 +260,8 @@
                         <!-- Gate Access Control Panel -->
                         <div class="data-panel gate-panel">
                             <div class="panel-header">
-                                <h3>Gate Access Control <span class="badge-live"><i class="fa-solid fa-circle-dot"></i> LIVE</span></h3>
+                                <h3>Gate Access Control <span class="badge-live"><i class="fa-solid fa-circle-dot"></i>
+                                        LIVE</span></h3>
                             </div>
                             <div class="gate-feed-container">
                                 <div class="gate-feed" id="gate-feed">
@@ -227,10 +283,14 @@
                             <div class="dual-comparison-grid">
                                 <div class="ticket-side dispatch">
                                     <div class="ticket-header">DISPATCH <i class="fa-solid fa-upload"></i></div>
-                                    <div class="ticket-row"><label>Ticket No:</label> <span id="disp-no">D-11029</span></div>
-                                    <div class="ticket-row"><label>Source:</label> <span id="disp-src">Primary Pit A</span></div>
-                                    <div class="ticket-row"><label>Nett Weight:</label> <span id="disp-weight" class="weight">34.10 t</span></div>
-                                    <div class="ticket-row"><label>Timestamp:</label> <span id="disp-time">2026-05-15 14:20</span></div>
+                                    <div class="ticket-row"><label>Ticket No:</label> <span id="disp-no">D-11029</span>
+                                    </div>
+                                    <div class="ticket-row"><label>Source:</label> <span id="disp-src">Primary Pit
+                                            A</span></div>
+                                    <div class="ticket-row"><label>Nett Weight:</label> <span id="disp-weight"
+                                            class="weight">34.10 t</span></div>
+                                    <div class="ticket-row"><label>Timestamp:</label> <span id="disp-time">2026-05-15
+                                            14:20</span></div>
                                 </div>
                                 <div class="variance-meter">
                                     <div class="variance-value" id="variance-val">1.2%</div>
@@ -240,10 +300,14 @@
                                 </div>
                                 <div class="ticket-side receipt">
                                     <div class="ticket-header">RECEIPT <i class="fa-solid fa-download"></i></div>
-                                    <div class="ticket-row"><label>Ticket No:</label> <span id="rect-no">R-55902</span></div>
-                                    <div class="ticket-row"><label>Destination:</label> <span id="rect-dest">Stockpile C</span></div>
-                                    <div class="ticket-row"><label>Nett Weight:</label> <span id="rect-weight" class="weight">33.69 t</span></div>
-                                    <div class="ticket-row"><label>Timestamp:</label> <span id="rect-time">2026-05-15 15:45</span></div>
+                                    <div class="ticket-row"><label>Ticket No:</label> <span id="rect-no">R-55902</span>
+                                    </div>
+                                    <div class="ticket-row"><label>Destination:</label> <span id="rect-dest">Stockpile
+                                            C</span></div>
+                                    <div class="ticket-row"><label>Nett Weight:</label> <span id="rect-weight"
+                                            class="weight">33.69 t</span></div>
+                                    <div class="ticket-row"><label>Timestamp:</label> <span id="rect-time">2026-05-15
+                                            15:45</span></div>
                                 </div>
                             </div>
                         </div>
@@ -261,10 +325,13 @@
                                 <div class="map-overlay">
                                     <div class="transit-route">
                                         <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                                            <path id="svg-route-line" d="M10,90 Q40,50 90,10" stroke="rgba(6, 182, 212, 0.4)" stroke-width="2.5" fill="none" stroke-dasharray="6" class="route-path" />
+                                            <path id="svg-route-line" d="M10,90 Q40,50 90,10"
+                                                stroke="rgba(6, 182, 212, 0.4)" stroke-width="2.5" fill="none"
+                                                stroke-dasharray="6" class="route-path" />
                                         </svg>
                                     </div>
-                                    <div class="marker truck-marker pulse" style="top: 50%; left: 50%;" id="moving-truck">
+                                    <div class="marker truck-marker pulse" style="top: 50%; left: 50%;"
+                                        id="moving-truck">
                                         <i class="fa-solid fa-truck"></i>
                                         <div class="marker-tooltip">
                                             <strong id="moving-truck-reg">GP-142-TR</strong><br>
@@ -294,7 +361,8 @@
                             <p>Manage digital cargo orders, assign logistics firms, and authorize fleets.</p>
                         </div>
                         <div class="hero-actions">
-                            <button class="btn-primary" id="btn-create-order-tab"><i class="fa-solid fa-plus"></i> Create New Order</button>
+                            <button class="btn-primary" id="btn-create-order-tab"><i class="fa-solid fa-plus"></i>
+                                Create New Order</button>
                         </div>
                     </section>
 
@@ -302,7 +370,8 @@
                         <div class="panel-header">
                             <h3>Active Order Contracts</h3>
                             <div class="panel-actions">
-                                <input id="orders-search" type="search" class="search-input" placeholder="Search orders by customer or product..." />
+                                <input id="orders-search" type="search" class="search-input"
+                                    placeholder="Search orders by customer or product..." />
                             </div>
                         </div>
                         <div class="table-container">
@@ -340,7 +409,8 @@
                         <div class="data-panel table-panel">
                             <div class="panel-header">
                                 <h3>Active Transit Vehicles</h3>
-                                <span class="panel-note">Simulated GPS telemetry data from vehicles within geofence boundaries</span>
+                                <span class="panel-note">Simulated GPS telemetry data from vehicles within geofence
+                                    boundaries</span>
                             </div>
                             <div class="table-container">
                                 <table>
@@ -369,12 +439,17 @@
                             <div class="map-placeholder" style="height: 310px;">
                                 <div class="map-overlay">
                                     <div class="transit-route">
-                                        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="height:100%; width:100%;">
-                                            <path d="M10,90 Q40,50 90,10" stroke="rgba(6, 182, 212, 0.4)" stroke-width="2.5" fill="none" stroke-dasharray="6" class="route-path" />
-                                            <path d="M10,90 Q15,40 55,50 T90,10" stroke="rgba(249, 115, 22, 0.2)" stroke-width="1.5" fill="none" />
+                                        <svg viewBox="0 0 100 100" preserveAspectRatio="none"
+                                            style="height:100%; width:100%;">
+                                            <path d="M10,90 Q40,50 90,10" stroke="rgba(6, 182, 212, 0.4)"
+                                                stroke-width="2.5" fill="none" stroke-dasharray="6"
+                                                class="route-path" />
+                                            <path d="M10,90 Q15,40 55,50 T90,10" stroke="rgba(249, 115, 22, 0.2)"
+                                                stroke-width="1.5" fill="none" />
                                         </svg>
                                     </div>
-                                    <div class="marker truck-marker pulse" style="top: 50%; left: 50%;" id="logistics-truck-1">
+                                    <div class="marker truck-marker pulse" style="top: 50%; left: 50%;"
+                                        id="logistics-truck-1">
                                         <i class="fa-solid fa-truck"></i>
                                         <div class="marker-tooltip">
                                             <strong>GP-142-TR</strong><br>
@@ -382,7 +457,8 @@
                                             <span class="status-ok">Normal Path</span>
                                         </div>
                                     </div>
-                                    <div class="marker alert-marker pulse-danger" style="top: 35%; left: 32%;" id="logistics-truck-2">
+                                    <div class="marker alert-marker pulse-danger" style="top: 35%; left: 32%;"
+                                        id="logistics-truck-2">
                                         <i class="fa-solid fa-triangle-exclamation"></i>
                                         <div class="marker-tooltip">
                                             <strong>NW-441-RT</strong><br>
@@ -454,8 +530,10 @@
                                 <svg class="svg-chart" id="tonnage-line-chart" viewBox="0 0 600 240">
                                     <defs>
                                         <linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stop-color="var(--primary-amber)" stop-opacity="0.3"></stop>
-                                            <stop offset="100%" stop-color="var(--primary-amber)" stop-opacity="0.0"></stop>
+                                            <stop offset="0%" stop-color="var(--primary-amber)" stop-opacity="0.3">
+                                            </stop>
+                                            <stop offset="100%" stop-color="var(--primary-amber)" stop-opacity="0.0">
+                                            </stop>
                                         </linearGradient>
                                     </defs>
                                     <!-- Gridlines -->
@@ -463,7 +541,7 @@
                                     <line x1="50" y1="80" x2="570" y2="80" class="chart-gridline"></line>
                                     <line x1="50" y1="130" x2="570" y2="130" class="chart-gridline"></line>
                                     <line x1="50" y1="180" x2="570" y2="180" class="chart-gridline"></line>
-                                    
+
                                     <!-- Chart Area fill -->
                                     <path d="" class="chart-line-area" id="chart-area-path"></path>
                                     <!-- Chart Line -->
@@ -522,14 +600,16 @@
                                     <label>Simulation Interval (Seconds)</label>
                                     <span>Adjust speed of telemetry events generated (10s to 30s).</span>
                                 </div>
-                                <input type="range" id="settings-simulation-speed" min="10" max="30" value="15" style="width:110px; accent-color:var(--primary-amber);">
+                                <input type="range" id="settings-simulation-speed" min="10" max="30" value="15"
+                                    style="width:110px; accent-color:var(--primary-amber);">
                             </div>
                             <div class="settings-item">
                                 <div class="settings-info">
                                     <label>Auto-Reconcile Variance Threshold</label>
                                     <span>Flags ticket comparison discrepancy checks above this percentage.</span>
                                 </div>
-                                <input type="number" id="settings-variance-threshold" value="2.0" step="0.1" style="width: 80px; text-align: center;">
+                                <input type="number" id="settings-variance-threshold" value="2.0" step="0.1"
+                                    style="width: 80px; text-align: center;">
                             </div>
                         </div>
 
@@ -545,7 +625,727 @@
                                 <label>Target Daily Tonnage Limit (tons)</label>
                                 <input type="number" id="settings-daily-target" value="1300">
                             </div>
-                            <button class="btn-primary" id="btn-save-settings" style="width: 100%; justify-content: center;"><i class="fa-solid fa-floppy-disk"></i> Save Configurations</button>
+                            <button class="btn-primary" id="btn-save-settings"
+                                style="width: 100%; justify-content: center;"><i class="fa-solid fa-floppy-disk"></i>
+                                Save Configurations</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 7: SITES & LOCATIONS -->
+                <div id="sites-view" class="view-section">
+                    <section class="hero-section">
+                        <div class="hero-text">
+                            <h1>Sites & Locations</h1>
+                            <p>Manage mining sites, weighbridges, stockpiles, and destination depots.</p>
+                        </div>
+                        <div class="hero-actions">
+                            <button class="btn-primary" id="btn-create-site"><i class="fa-solid fa-plus"></i> Add New
+                                Site</button>
+                        </div>
+                    </section>
+                    <div class="data-panel full-row">
+                        <div class="panel-header">
+                            <h3>Active Mining & Delivery Sites</h3>
+                            <div class="panel-actions">
+                                <input id="sites-search" type="search" class="search-input"
+                                    placeholder="Search sites..." />
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Site Name</th>
+                                        <th>Type</th>
+                                        <th>GPS Coordinates</th>
+                                        <th>Operating Hours</th>
+                                        <th>Access Regulations</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sites-list-body">
+                                    <!-- Injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 8: FLEET & DRIVERS CRUD -->
+                <div id="fleets-view" class="view-section">
+                    <section class="hero-section">
+                        <div class="hero-text">
+                            <h1>Fleets, Vehicles & Drivers</h1>
+                            <p>Manage logistics hauliers, registered trucks/trailers, and driver compliance inductions.
+                            </p>
+                        </div>
+                        <div class="hero-actions">
+                            <button class="btn-primary" id="btn-create-fleet-item"><i class="fa-solid fa-plus"></i>
+                                Register New...</button>
+                        </div>
+                    </section>
+
+                    <div class="modal-tabs" style="margin-bottom: 1.5rem; justify-content: flex-start; gap: 10px;">
+                        <button class="tab-btn active" id="tab-btn-hauliers" data-fleet-tab="hauliers">Haulier
+                            Companies</button>
+                        <button class="tab-btn" id="tab-btn-vehicles" data-fleet-tab="vehicles">Vehicles
+                            (Trucks/Trailers)</button>
+                        <button class="tab-btn" id="tab-btn-drivers" data-fleet-tab="drivers">Drivers</button>
+                    </div>
+
+                    <!-- Fleet Tab: Hauliers -->
+                    <div id="fleet-tab-hauliers" class="fleet-tab-content active">
+                        <div class="data-panel full-row">
+                            <div class="panel-header">
+                                <h3>Registered Hauliers</h3>
+                                <div class="panel-actions">
+                                    <input id="hauliers-search" type="search" class="search-input"
+                                        placeholder="Search hauliers..." />
+                                </div>
+                            </div>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Company Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Compliance Status</th>
+                                            <th>Active</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="hauliers-list-body">
+                                        <!-- Injected by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fleet Tab: Vehicles -->
+                    <div id="fleet-tab-vehicles" class="fleet-tab-content">
+                        <div class="data-panel full-row">
+                            <div class="panel-header">
+                                <h3>Registered Vehicles</h3>
+                                <div class="panel-actions">
+                                    <input id="vehicles-search" type="search" class="search-input"
+                                        placeholder="Search vehicles..." />
+                                </div>
+                            </div>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Registration</th>
+                                            <th>Fleet Group</th>
+                                            <th>Haulier</th>
+                                            <th>Type</th>
+                                            <th>Max Legal Weight</th>
+                                            <th>Compliance</th>
+                                            <th>GPS Device ID</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="vehicles-list-body">
+                                        <!-- Injected by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fleet Tab: Drivers -->
+                    <div id="fleet-tab-drivers" class="fleet-tab-content">
+                        <div class="data-panel full-row">
+                            <div class="panel-header">
+                                <h3>Registered Drivers</h3>
+                                <div class="panel-actions">
+                                    <input id="drivers-search" type="search" class="search-input"
+                                        placeholder="Search drivers..." />
+                                </div>
+                            </div>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Driver Name</th>
+                                            <th>ID Number</th>
+                                            <th>License Number</th>
+                                            <th>Haulier</th>
+                                            <th>Induction Status</th>
+                                            <th>Medical Expiry</th>
+                                            <th>Training Expiry</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="drivers-list-body">
+                                        <!-- Injected by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 9: WEIGHBRIDGE SIMULATOR -->
+                <div id="weighbridge-sim-view" class="view-section">
+                    <section class="hero-section">
+                        <div class="hero-text">
+                            <h1>Weighbridge Manual Deck Simulator</h1>
+                            <p>Simulate physical scale arrivals, security clearance checks, tare/gross weight capturing,
+                                and tickets generation.</p>
+                        </div>
+                    </section>
+
+                    <div class="data-layout">
+                        <!-- Controls panel -->
+                        <div class="data-panel table-panel">
+                            <div class="panel-header">
+                                <h3>Manual Weighbridge Console</h3>
+                            </div>
+
+                            <!-- Simulator steps timeline -->
+                            <div class="sim-timeline">
+                                <div class="sim-step active" id="sim-step-1-indicator"><span>1</span> Select Vehicle
+                                </div>
+                                <div class="sim-step" id="sim-step-2-indicator"><span>2</span> Security Clear</div>
+                                <div class="sim-step" id="sim-step-3-indicator"><span>3</span> Tare Weight</div>
+                                <div class="sim-step" id="sim-step-4-indicator"><span>4</span> Gross Weight</div>
+                                <div class="sim-step" id="sim-step-5-indicator"><span>5</span> Ticket Output</div>
+                            </div>
+
+                            <div class="sim-content-pane">
+                                <!-- Step 1: Select vehicle/order -->
+                                <div class="sim-content-step active" id="sim-step-pane-1">
+                                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                                        <label>Select Active Order Allocation</label>
+                                        <select id="sim-order-select">
+                                            <option value="">Select Order...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Select Transport Haulier</label>
+                                            <select id="sim-haulier-select" disabled>
+                                                <option value="">Select Haulier...</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Select Truck / Vehicle</label>
+                                            <select id="sim-vehicle-select" disabled>
+                                                <option value="">Select Vehicle...</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Assigned Driver</label>
+                                            <input type="text" id="sim-driver-input" readonly
+                                                placeholder="No driver linked"
+                                                style="background:rgba(255,255,255,0.01);">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Trailer Registration</label>
+                                            <input type="text" id="sim-trailer-input" placeholder="e.g. MP-123-TR">
+                                        </div>
+                                    </div>
+                                    <button class="btn-primary" id="btn-sim-next-1"
+                                        style="width: 100%; justify-content: center; margin-top: 1rem;">Verify Security
+                                        & Compliance <i class="fa-solid fa-arrow-right"></i></button>
+                                </div>
+
+                                <!-- Step 2: Gate Security Clearance -->
+                                <div class="sim-content-step" id="sim-step-pane-2">
+                                    <div class="compliance-status-banner" id="sim-compliance-banner">
+                                        <!-- Will show compliance check results -->
+                                    </div>
+                                    <div class="compliance-details-box" id="sim-compliance-details">
+                                        <!-- Verification checklist -->
+                                    </div>
+                                    <div class="form-row" style="margin-top: 1.5rem;">
+                                        <button class="btn-secondary" id="btn-sim-prev-2"><i
+                                                class="fa-solid fa-arrow-left"></i> Back</button>
+                                        <button class="btn-primary" id="btn-sim-next-2"
+                                            style="flex:1; justify-content: center;">Proceed to Scale Deck <i
+                                                class="fa-solid fa-arrow-right"></i></button>
+                                    </div>
+                                </div>
+
+                                <!-- Step 3: Capture Tare Weight -->
+                                <div class="sim-content-step" id="sim-step-pane-3">
+                                    <div class="scale-gauge-container">
+                                        <div class="scale-gauge-title">Scale Tare Deck</div>
+                                        <div class="scale-weight-display" id="sim-tare-display">0.00 <small>t</small>
+                                        </div>
+                                        <button class="btn-primary" id="btn-sim-capture-tare"><i
+                                                class="fa-solid fa-scale-balanced"></i> Capture Scale Weight</button>
+                                    </div>
+                                    <div class="form-group" style="margin-top: 1.5rem;">
+                                        <label>Manual Tare Weight Override (t)</label>
+                                        <input type="number" id="sim-tare-weight-input" step="0.01" value="14.50">
+                                    </div>
+                                    <div class="form-row" style="margin-top: 1.5rem;">
+                                        <button class="btn-secondary" id="btn-sim-prev-3"><i
+                                                class="fa-solid fa-arrow-left"></i> Back</button>
+                                        <button class="btn-primary" id="btn-sim-next-3"
+                                            style="flex:1; justify-content: center;" id="btn-sim-next-3-btn"
+                                            disabled>Proceed to Load Material <i
+                                                class="fa-solid fa-arrow-right"></i></button>
+                                    </div>
+                                </div>
+
+                                <!-- Step 4: Capture Gross Weight -->
+                                <div class="sim-content-step" id="sim-step-pane-4">
+                                    <div class="scale-gauge-container">
+                                        <div class="scale-gauge-title">Scale Gross Deck</div>
+                                        <div class="scale-weight-display" id="sim-gross-display">0.00 <small>t</small>
+                                        </div>
+                                        <button class="btn-primary" id="btn-sim-capture-gross"><i
+                                                class="fa-solid fa-scale-balanced"></i> Capture Scale Weight</button>
+                                    </div>
+                                    <div class="form-row" style="margin-top: 1.5rem;">
+                                        <div class="form-group">
+                                            <label>Manual Gross Weight Override (t)</label>
+                                            <input type="number" id="sim-gross-weight-input" step="0.01" value="48.50">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Destination Receipt Weight (t) <small>(For variance
+                                                    simulation)</small></label>
+                                            <input type="number" id="sim-dest-weight-input" step="0.01" value="33.80">
+                                        </div>
+                                    </div>
+                                    <div class="form-row" style="margin-top: 1.5rem;">
+                                        <button class="btn-secondary" id="btn-sim-prev-4"><i
+                                                class="fa-solid fa-arrow-left"></i> Back</button>
+                                        <button class="btn-primary" id="btn-sim-next-4"
+                                            style="flex:1; justify-content: center;" id="btn-sim-next-4-btn"
+                                            disabled>Generate Weighbridge Ticket <i
+                                                class="fa-solid fa-arrow-right"></i></button>
+                                    </div>
+                                </div>
+
+                                <!-- Step 5: Finalized ticket output -->
+                                <div class="sim-content-step" id="sim-step-pane-5">
+                                    <div class="alert alert-success"
+                                        style="background:var(--success-glow); border:1px solid var(--success); border-radius:12px; padding:1rem; margin-bottom:1.5rem; color:#34d399; font-size:0.88rem;">
+                                        <i class="fa-solid fa-circle-check"></i> Weighbridge ticket successfully
+                                        compiled! Review the carbon print preview on the right.
+                                    </div>
+                                    <div class="form-row">
+                                        <button class="btn-secondary" id="btn-sim-reset"
+                                            style="flex: 1; justify-content: center;"><i
+                                                class="fa-solid fa-rotate-left"></i> Reset Simulator</button>
+                                        <button class="btn-primary" id="btn-sim-submit-ticket"
+                                            style="flex: 2; justify-content: center;"><i
+                                                class="fa-solid fa-cloud-arrow-up"></i> Sign, Post & Sync to
+                                            ERP</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ticket preview panel -->
+                        <div class="data-panel chart-panel" style="min-height: 480px;">
+                            <div class="panel-header">
+                                <h3>Carbon Print Preview</h3>
+                                <button class="btn-secondary" id="btn-sim-print-ticket" disabled><i
+                                        class="fa-solid fa-print"></i> Print</button>
+                            </div>
+                            <div class="ticket-carbon-copy" id="sim-ticket-preview">
+                                <div class="ticket-watermark">PREVIEW</div>
+                                <div class="ticket-header-print">
+                                    <div class="comp-name">WeighTruck Logistics</div>
+                                    <div class="comp-sub">Weighbridge Weighing Slip</div>
+                                </div>
+                                <div class="ticket-divider-print"></div>
+                                <div class="ticket-body-print">
+                                    <div class="print-row"><span class="print-lbl">Ticket No:</span> <span
+                                            class="print-val" id="t-preview-no">T-XXXXX</span></div>
+                                    <div class="print-row"><span class="print-lbl">Date & Time:</span> <span
+                                            class="print-val" id="t-preview-date">--:--</span></div>
+                                    <div class="print-row"><span class="print-lbl">Vehicle Reg:</span> <span
+                                            class="print-val" id="t-preview-reg">------</span></div>
+                                    <div class="print-row"><span class="print-lbl">Trailer Reg:</span> <span
+                                            class="print-val" id="t-preview-trailer">------</span></div>
+                                    <div class="print-row"><span class="print-lbl">Driver Name:</span> <span
+                                            class="print-val" id="t-preview-driver">------</span></div>
+                                    <div class="print-row"><span class="print-lbl">Haulier:</span> <span
+                                            class="print-val" id="t-preview-haulier">------</span></div>
+                                    <div class="print-divider"></div>
+                                    <div class="print-row"><span class="print-lbl">Mine/Origin:</span> <span
+                                            class="print-val" id="t-preview-origin">------</span></div>
+                                    <div class="print-row"><span class="print-lbl">Product:</span> <span
+                                            class="print-val" id="t-preview-product">------</span></div>
+                                    <div class="print-divider"></div>
+                                    <div class="print-row"><span class="print-lbl">Gross Mass:</span> <span
+                                            class="print-val" id="t-preview-gross">0.00 t</span></div>
+                                    <div class="print-row"><span class="print-lbl">Tare Mass:</span> <span
+                                            class="print-val" id="t-preview-tare">0.00 t</span></div>
+                                    <div class="print-row bold"><span class="print-lbl">Net Mass:</span> <span
+                                            class="print-val color-amber" id="t-preview-net">0.00 t</span></div>
+                                    <div class="print-divider"></div>
+                                    <div class="print-row"><span class="print-lbl">Status:</span> <span
+                                            class="print-val" id="t-preview-status">DRAFT</span></div>
+                                </div>
+                                <div class="ticket-footer-print">
+                                    <div>Operator Signature</div>
+                                    <div class="print-sig-line"></div>
+                                    <div class="print-footer-note">WeighTruck - Digital Reconciliation Systems</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 10: INTERSITE RECONCILIATION -->
+                <div id="reconciliation-view" class="view-section">
+                    <section class="hero-section">
+                        <div class="hero-text">
+                            <h1>Intersite Weight Reconciliation</h1>
+                            <p>Audit material variances by comparing weights captured at dispatch weighbridges vs
+                                receiving terminals.</p>
+                        </div>
+                    </section>
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card" style="border-left: 3px solid var(--success);">
+                            <div class="kpi-header"><span class="kpi-title">Matched Loads</span><i
+                                    class="fa-solid fa-circle-check" style="color:var(--success);"></i></div>
+                            <div class="kpi-value" id="kpi-recon-matched">0</div>
+                            <div class="kpi-trend up">Variance &lt; 1%</div>
+                        </div>
+                        <div class="kpi-card" style="border-left: 3px solid var(--warning);">
+                            <div class="kpi-header"><span class="kpi-title">Minor Variance</span><i
+                                    class="fa-solid fa-triangle-exclamation" style="color:var(--warning);"></i></div>
+                            <div class="kpi-value" id="kpi-recon-minor">0</div>
+                            <div class="kpi-trend neutral">Variance 1% - 2%</div>
+                        </div>
+                        <div class="kpi-card" style="border-left: 3px solid var(--danger);">
+                            <div class="kpi-header"><span class="kpi-title">Major Discrepancies</span><i
+                                    class="fa-solid fa-skull-crossbones" style="color:var(--danger);"></i></div>
+                            <div class="kpi-value" id="kpi-recon-major">0</div>
+                            <div class="kpi-trend down">Variance &gt; 2%</div>
+                        </div>
+                    </div>
+
+                    <div class="data-panel full-row">
+                        <div class="panel-header">
+                            <h3>Dual Weighbridge Ticket Reconciliation</h3>
+                            <div class="panel-actions">
+                                <select id="recon-status-filter" class="search-input" style="width: 180px;">
+                                    <option value="ALL">All Reconciliation</option>
+                                    <option value="Matched">Matched</option>
+                                    <option value="Minor Variance">Minor Variance</option>
+                                    <option value="Major Discrepancy">Major Discrepancy</option>
+                                    <option value="Unreconciled">Unreconciled</option>
+                                </select>
+                                <input id="recon-search" type="search" class="search-input"
+                                    placeholder="Search vehicle reg..." />
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Trip ID</th>
+                                        <th>Vehicle</th>
+                                        <th>Product</th>
+                                        <th>Dispatch Net</th>
+                                        <th>Received Net</th>
+                                        <th>Mass Variance</th>
+                                        <th>Variance %</th>
+                                        <th>Recon Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reconciliation-list-body">
+                                    <!-- Injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 11: ALERTS & EXCEPTIONS CENTER -->
+                <div id="alerts-center-view" class="view-section">
+                    <section class="hero-section">
+                        <div class="hero-text">
+                            <h1>Compliance Exceptions & Alerts</h1>
+                            <p>Real-time log of security gate denials, geofencing route deviations, and weighbridge
+                                overloading events.</p>
+                        </div>
+                        <div class="hero-actions">
+                            <button class="btn-secondary" id="btn-clear-all-alerts"><i class="fa-solid fa-broom"></i>
+                                Clear Read Alerts</button>
+                        </div>
+                    </section>
+
+                    <div class="data-panel full-row">
+                        <div class="panel-header">
+                            <h3>Operations Audit Trail</h3>
+                            <div class="panel-actions">
+                                <select id="alert-severity-filter" class="search-input" style="width: 180px;">
+                                    <option value="ALL">All Severities</option>
+                                    <option value="CRITICAL">Critical Only</option>
+                                    <option value="HIGH">High Severity</option>
+                                    <option value="MEDIUM">Medium Severity</option>
+                                    <option value="LOW">Low Severity</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Severity</th>
+                                        <th>Type</th>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="alerts-center-list-body">
+                                    <!-- Injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 12: BILLING READINESS -->
+                <div id="billing-view" class="view-section">
+                    <section class="hero-section">
+                        <div class="hero-text">
+                            <h1>Billing & Invoice Readiness</h1>
+                            <p>Track fully reconciled loads, calculate transport costs, and authorize invoices for
+                                haulier contracts.</p>
+                        </div>
+                    </section>
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card active-orders-kpi">
+                            <div class="kpi-header"><span class="kpi-title">Total Processed Tons</span><i
+                                    class="fa-solid fa-scale-balanced"></i></div>
+                            <div class="kpi-value" id="kpi-billing-tons">0.00 <small>t</small></div>
+                        </div>
+                        <div class="kpi-card tonnage-kpi">
+                            <div class="kpi-header"><span class="kpi-title">Gross Revenue (ZAR)</span><i
+                                    class="fa-solid fa-wallet"></i></div>
+                            <div class="kpi-value" id="kpi-billing-revenue">R 0.00</div>
+                        </div>
+                        <div class="kpi-card efficiency-kpi">
+                            <div class="kpi-header"><span class="kpi-title">Billing-Ready Loads</span><i
+                                    class="fa-solid fa-check-double"></i></div>
+                            <div class="kpi-value" id="kpi-billing-ready-count">0</div>
+                        </div>
+                    </div>
+
+                    <div class="data-panel full-row">
+                        <div class="panel-header">
+                            <h3>Haulier Revenue Audits</h3>
+                            <div class="panel-actions">
+                                <select id="billing-status-filter" class="search-input" style="width: 180px;">
+                                    <option value="ALL">All Statuses</option>
+                                    <option value="Pending">Pending Invoice</option>
+                                    <option value="Invoiced">Invoiced</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Ticket ID</th>
+                                        <th>Vehicle</th>
+                                        <th>Haulier</th>
+                                        <th>Product</th>
+                                        <th>Net Weight (t)</th>
+                                        <th>Rate (ZAR/t)</th>
+                                        <th>Total Charge (ZAR)</th>
+                                        <th>Recon Status</th>
+                                        <th>Invoice Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="billing-list-body">
+                                    <!-- Injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 13: MOBILE DRIVER PORTAL EMULATOR -->
+                <div id="driver-portal-view" class="view-section">
+                    <div class="driver-portal-container">
+                        <div class="driver-phone-emulator">
+                            <div class="phone-notch"></div>
+                            <div class="phone-screen">
+                                <div class="phone-header">
+                                    <div class="phone-time">08:45</div>
+                                    <div class="phone-status-icons">
+                                        <i class="fa-solid fa-signal"></i>
+                                        <i class="fa-solid fa-wifi"></i>
+                                        <i class="fa-solid fa-battery-three-quarters"></i>
+                                    </div>
+                                </div>
+
+                                <div class="phone-app-content">
+                                    <!-- Driver Screen 1: Pick up Trip -->
+                                    <div class="driver-screen active" id="driver-screen-pickup">
+                                        <div class="app-brand-bar">
+                                            <i class="fa-solid fa-truck-moving"></i> WeighTruck Driver
+                                        </div>
+                                        <div class="driver-welcome-box">
+                                            <h3>Good Morning, <span id="driver-portal-name">Driver</span></h3>
+                                            <p>Vehicle: <strong id="driver-portal-reg">GP-142-TR</strong></p>
+                                            <span class="status-badge complete" style="margin-top: 5px;">Active
+                                                Induction</span>
+                                        </div>
+
+                                        <div class="driver-section-title">Your Assigned Tasks</div>
+                                        <div class="driver-order-card" id="driver-no-trip">
+                                            <p
+                                                style="text-align: center; color: var(--text-muted); font-size: 0.88rem; padding: 1.5rem 0;">
+                                                No active trip assignments.</p>
+                                        </div>
+                                        <div class="driver-order-card" id="driver-trip-box" style="display:none;">
+                                            <div class="driver-trip-header">
+                                                <span class="trip-id" id="drv-trip-id">ORD-4029</span>
+                                                <span class="trip-type" id="drv-trip-type">DISPATCH</span>
+                                            </div>
+                                            <div class="driver-trip-body">
+                                                <div class="trip-detail-row"><i class="fa-solid fa-box"></i> <span
+                                                        id="drv-trip-product">Anthracite Pea</span></div>
+                                                <div class="trip-detail-row"><i class="fa-solid fa-building"></i> <span
+                                                        id="drv-trip-client">Glencore Operations</span></div>
+                                                <div class="trip-detail-row"><i class="fa-solid fa-weight-hanging"></i>
+                                                    <span id="drv-trip-mass">34.00 t Target</span></div>
+                                            </div>
+                                            <button class="btn-primary" id="btn-driver-start-trip"
+                                                style="width:100%; justify-content:center; margin-top:1rem;"><i
+                                                    class="fa-solid fa-play"></i> Start Load Transit</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Driver Screen 2: Transit Map & Check-in -->
+                                    <div class="driver-screen" id="driver-screen-transit">
+                                        <div class="app-navbar">
+                                            <button class="btn-back-phone" id="btn-driver-back-transit"><i
+                                                    class="fa-solid fa-chevron-left"></i></button>
+                                            <span>Trip In Transit</span>
+                                        </div>
+
+                                        <!-- Simulated GPS Telemetry Status -->
+                                        <div class="driver-transit-status">
+                                            <div class="transit-progress-bar">
+                                                <div class="transit-progress-fill" id="driver-transit-progress"
+                                                    style="width: 10%;"></div>
+                                            </div>
+                                            <div class="transit-meta">
+                                                <span id="drv-transit-status-txt">En Route to Origin</span>
+                                                <span id="drv-transit-coords">-26.2483, 29.3512</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="phone-map-placeholder">
+                                            <div class="map-grid-overlay"></div>
+                                            <div class="phone-route-vector">
+                                                <div class="phone-route-dot dot-origin"></div>
+                                                <div class="phone-route-dot dot-dest"></div>
+                                                <div class="phone-route-truck" id="phone-moving-truck"><i
+                                                        class="fa-solid fa-truck"></i></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="driver-action-container">
+                                            <button class="btn-primary" id="btn-driver-update-gps"
+                                                style="width:100%; justify-content:center; margin-bottom: 0.5rem;"><i
+                                                    class="fa-solid fa-location-crosshairs"></i> Send GPS Ping</button>
+                                            <button class="btn-primary" id="btn-driver-gate-checkin"
+                                                style="width:100%; justify-content:center;" disabled><i
+                                                    class="fa-solid fa-qrcode"></i> Scan In at Weighbridge</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Driver Screen 3: Gate QR Code -->
+                                    <div class="driver-screen" id="driver-screen-qrcode">
+                                        <div class="app-navbar">
+                                            <button class="btn-back-phone" id="btn-driver-back-qr"><i
+                                                    class="fa-solid fa-chevron-left"></i></button>
+                                            <span>Weighbridge Check-In</span>
+                                        </div>
+                                        <div class="qr-code-body">
+                                            <p
+                                                style="text-align:center; font-size:0.85rem; margin-bottom:1rem; color:var(--text-muted);">
+                                                Present this RFID/QR code to the gate reader for access clearance.</p>
+                                            <div class="qr-container">
+                                                <!-- Simulated QR Code -->
+                                                <div class="qr-box">
+                                                    <i class="fa-solid fa-qrcode"
+                                                        style="font-size: 8rem; color:#ffffff;"></i>
+                                                    <div class="qr-overlay-txt" id="qr-text-reg">GP-142-TR</div>
+                                                </div>
+                                            </div>
+                                            <div class="gate-status-msg pending" id="driver-gate-status-message">
+                                                <i class="fa-solid fa-circle-notch fa-spin"></i> Waiting for weighbridge
+                                                check-in...
+                                            </div>
+                                            <button class="btn-primary" id="btn-driver-simulate-weigh"
+                                                style="width:100%; justify-content:center; margin-top:1.5rem;"><i
+                                                    class="fa-solid fa-scale-balanced"></i> Weigh Tare/Gross</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Driver Screen 4: Drop-off and Receipt weight capture -->
+                                    <div class="driver-screen" id="driver-screen-dropoff">
+                                        <div class="app-navbar">
+                                            <span>Confirm Delivery</span>
+                                        </div>
+                                        <div class="driver-trip-body" style="padding: 1rem 1.5rem;">
+                                            <h3>Trip Delivery Point</h3>
+                                            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">
+                                                Submit destination received mass to complete the intersite
+                                                reconciliation check.</p>
+                                            <div class="form-group" style="margin-bottom:1rem;">
+                                                <label>Destination / Stockpile</label>
+                                                <select id="drv-dropoff-sp-select" class="form-group select"
+                                                    style="width:100%;">
+                                                    <option value="Stockpile A">Stockpile A</option>
+                                                    <option value="Stockpile B">Stockpile B</option>
+                                                    <option value="Stockpile C">Stockpile C</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group" style="margin-bottom:1.5rem;">
+                                                <label>Destination Scale Weight (t)</label>
+                                                <input type="number" id="drv-receipt-weight-input" step="0.01"
+                                                    value="33.85" style="width:100%;">
+                                            </div>
+                                            <button class="btn-primary" id="btn-driver-complete-trip"
+                                                style="width:100%; justify-content:center;"><i
+                                                    class="fa-solid fa-circle-check"></i> Submit Delivery
+                                                Receipt</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Driver Screen 5: Done/Success -->
+                                    <div class="driver-screen" id="driver-screen-success">
+                                        <div class="success-screen-body">
+                                            <div class="success-icon-ring"><i class="fa-solid fa-check"></i></div>
+                                            <h2>Delivery Successful</h2>
+                                            <p>Your trip payload has been logged and sent for automated reconciliation.
+                                                Safe travels!</p>
+                                            <button class="btn-primary" id="btn-driver-return-home"
+                                                style="width:100%; justify-content:center; margin-top:2rem;"><i
+                                                    class="fa-solid fa-house"></i> Return to Home</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -623,7 +1423,8 @@
                             </div>
                             <div class="form-group">
                                 <label>Estimated Order Mass (t)</label>
-                                <input type="number" name="EstimatedMass" id="orderEstimatedMass" value="34.00" step="0.01">
+                                <input type="number" name="EstimatedMass" id="orderEstimatedMass" value="34.00"
+                                    step="0.01">
                             </div>
                         </div>
                         <div class="form-row">
@@ -655,7 +1456,8 @@
                                 <textarea name="OrderNote" placeholder="e.g. Moisture adjustment details..."></textarea>
                             </div>
                         </div>
-                        <div id="order-note-container" class="order-note-alert" style="margin-top: 1rem; display: none;">
+                        <div id="order-note-container" class="order-note-alert"
+                            style="margin-top: 1rem; display: none;">
                             <i class="fa-solid fa-circle-info"></i> <span id="order-note-text"></span>
                         </div>
                     </form>
@@ -678,7 +1480,8 @@
                                 <span class="value warning" id="displayUnallocatedMass">34.00 t</span>
                             </div>
                         </div>
-                        <button class="btn-secondary" id="btn-add-haulier"><i class="fa-solid fa-truck-ramp-box"></i> Add Haulier</button>
+                        <button class="btn-secondary" id="btn-add-haulier"><i class="fa-solid fa-truck-ramp-box"></i>
+                            Add Haulier</button>
                     </div>
                     <div class="table-container">
                         <table id="gridHaulierList">
@@ -749,7 +1552,8 @@
                         <div class="picker-header">
                             <h3>Available (<span id="displayAvailableVehicles">0</span>)</h3>
                             <div class="picker-filter" style="margin-top: 5px;">
-                                <label><input type="checkbox" id="checkboxShowNonInducted" checked> Inducted Only</label>
+                                <label><input type="checkbox" id="checkboxShowNonInducted" checked> Inducted
+                                    Only</label>
                             </div>
                         </div>
                         <div class="picker-list" id="list-available">
@@ -776,6 +1580,231 @@
         </div>
     </div>
 
+    <!-- MODAL: Create/Edit Site -->
+    <div id="site-crud-modal" class="modal">
+        <div class="modal-content medium">
+            <div class="modal-header">
+                <h2 id="site-modal-title">Register New Site</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="site-crud-form">
+                    <input type="hidden" name="siteId" id="site-crud-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Site Name</label>
+                            <input type="text" name="name" id="site-crud-name" required
+                                placeholder="e.g. Goedehoop Colliery">
+                        </div>
+                        <div class="form-group">
+                            <label>Site Type</label>
+                            <select name="type" id="site-crud-type">
+                                <option value="MINE">Mine Site</option>
+                                <option value="STOCKPILE">Stockpile Yard</option>
+                                <option value="WEIGHBRIDGE">Weighbridge Site</option>
+                                <option value="CUSTOMER_SITE">Customer Delivery Site</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Latitude</label>
+                            <input type="number" name="latitude" id="site-crud-lat" step="0.0001"
+                                placeholder="e.g. -26.2483">
+                        </div>
+                        <div class="form-group">
+                            <label>Longitude</label>
+                            <input type="number" name="longitude" id="site-crud-lng" step="0.0001"
+                                placeholder="e.g. 29.3512">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Operating Hours</label>
+                            <input type="text" name="operatingHours" id="site-crud-hours"
+                                placeholder="e.g. 06:00 - 22:00">
+                        </div>
+                        <div class="form-group">
+                            <label>Access Regulations</label>
+                            <input type="text" name="accessRules" id="site-crud-rules"
+                                placeholder="e.g. Driver induction & PPE required">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-text close-modal">Cancel</button>
+                <button class="btn-primary" id="btn-save-site-crud">Save Site & Sync</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Create/Edit Haulier -->
+    <div id="haulier-crud-modal" class="modal">
+        <div class="modal-content medium">
+            <div class="modal-header">
+                <h2 id="haulier-crud-modal-title">Register New Haulier</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="haulier-crud-form">
+                    <input type="hidden" name="haulierId" id="haulier-crud-id">
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label>Company Name</label>
+                        <input type="text" name="name" id="haulier-crud-name" required
+                            placeholder="e.g. TransCoal Transport">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" name="email" id="haulier-crud-email"
+                                placeholder="e.g. contact@haulier.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" name="phone" id="haulier-crud-phone" placeholder="e.g. +27 11 123 4567">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Compliance Status</label>
+                        <select name="complianceStatus" id="haulier-crud-compliance">
+                            <option value="Compliant">Compliant</option>
+                            <option value="Suspended">Suspended</option>
+                            <option value="Review Required">Review Required</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-text close-modal">Cancel</button>
+                <button class="btn-primary" id="btn-save-haulier-crud">Save Haulier</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Create/Edit Vehicle -->
+    <div id="vehicle-crud-modal" class="modal">
+        <div class="modal-content medium">
+            <div class="modal-header">
+                <h2 id="vehicle-crud-modal-title">Register New Vehicle</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="vehicle-crud-form">
+                    <input type="hidden" name="vehicleId" id="vehicle-crud-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Registration Number</label>
+                            <input type="text" name="reg" id="vehicle-crud-reg" required placeholder="e.g. GP-142-TR">
+                        </div>
+                        <div class="form-group">
+                            <label>Fleet Group</label>
+                            <input type="text" name="fleet" id="vehicle-crud-fleet" placeholder="e.g. Sasol Fleet">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Assigned Haulier</label>
+                            <select name="haulier" id="vehicle-crud-haulier">
+                                <!-- Options will be dynamic -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Vehicle Type</label>
+                            <select name="type" id="vehicle-crud-type">
+                                <option value="TRUCK">Rigid Truck</option>
+                                <option value="TRAILER">Interlink Trailer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Max Legal Weight (Tons)</label>
+                            <input type="number" name="maxLegalWeight" id="vehicle-crud-weight" step="0.1" value="50.0">
+                        </div>
+                        <div class="form-group">
+                            <label>Compliance Status</label>
+                            <select name="complianceStatus" id="vehicle-crud-compliance">
+                                <option value="Compliant">Compliant</option>
+                                <option value="Non-Compliant">Non-Compliant</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>GPS Device ID</label>
+                        <input type="text" name="gpsDeviceId" id="vehicle-crud-gps" placeholder="e.g. GPS-V-122">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-text close-modal">Cancel</button>
+                <button class="btn-primary" id="btn-save-vehicle-crud">Save Vehicle</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Create/Edit Driver -->
+    <div id="driver-crud-modal" class="modal">
+        <div class="modal-content medium">
+            <div class="modal-header">
+                <h2 id="driver-crud-modal-title">Register New Driver</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="driver-crud-form">
+                    <input type="hidden" name="driverId" id="driver-crud-id">
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label>Full Name</label>
+                        <input type="text" name="name" id="driver-crud-name" required placeholder="e.g. Sipho Zuma">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>ID / Passport Number</label>
+                            <input type="text" name="idNumber" id="driver-crud-idnum" required
+                                placeholder="e.g. 8904125555081">
+                        </div>
+                        <div class="form-group">
+                            <label>License Number</label>
+                            <input type="text" name="licenseNumber" id="driver-crud-licensenum" required
+                                placeholder="e.g. DR-ML12345">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Assigned Haulier</label>
+                            <select name="assignedHaulier" id="driver-crud-haulier">
+                                <!-- Options will be dynamic -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Induction Status</label>
+                            <select name="inductionStatus" id="driver-crud-induction">
+                                <option value="Active">Active</option>
+                                <option value="Expired">Expired</option>
+                                <option value="Suspended">Suspended</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Medical Certificate Expiry</label>
+                            <input type="date" name="medicalExpiryDate" id="driver-crud-medical">
+                        </div>
+                        <div class="form-group">
+                            <label>Safety Training Expiry</label>
+                            <input type="date" name="trainingExpiryDate" id="driver-crud-training">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-text close-modal">Cancel</button>
+                <button class="btn-primary" id="btn-save-driver-crud">Save Driver</button>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
+
 </html>

@@ -1,7 +1,7 @@
 {
   "name": "tontrac-clone",
   "version": "1.0.0",
-  "description": "Premium industrial dashboard for TonTrac / WieghTruck with Spring Boot & TypeScript",
+  "description": "Premium industrial dashboard for TonTrac / WeighTruck with Spring Boot & TypeScript",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w"
