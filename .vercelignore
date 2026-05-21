@@ -1,0 +1,17 @@
+# Ignore backend Spring Boot application
+backend/
+
+# Ignore node modules and local development tools
+node_modules/
+package.json
+package-lock.json
+tsconfig.json
+app.ts
+scratch/
+
+# Ignore Windows command batch scripts
+*.bat
+
+# Ignore git metadata
+.git/
+.gitignore
