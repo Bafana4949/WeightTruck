@@ -141,7 +141,7 @@ interface AppState {
 
 document.addEventListener('DOMContentLoaded', async () => {
     // --- API CONFIGURATION ---
-    const BACKEND_URL = 'http://localhost:8080/api';
+    const BACKEND_URL = 'http://localhost:8081/api';
     let useBackend = false;
 
     // --- LOCAL STORAGE MOCK DATA ---
